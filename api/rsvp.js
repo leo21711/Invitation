@@ -1,50 +1,36 @@
-// Vercel serverless function. Talks to Supabase with plain fetch (no library).
-const SUPABASE_URL = 'https://gdlhkmaurgiqcicuowwg.supabase.co'; // must match Supabase > Data API > Project URL
-const KEY = String(process.env.SUPABASE_SECRET_KEY || '').trim().replace(/^["']+|["']+$/g, '');
-const TOKEN_RE = /^[A-Za-z0-9]{6,32}$/;
+// Vercel serverless function: relays RSVP requests to the Google Apps Script web app.
+// Paste the Apps Script "Web app URL" (ends in /exec) between the quotation marks.
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
 
-function headers(extra) {
-  const h = { apikey: KEY, 'Content-Type': 'application/json', ...extra };
-  // Legacy service_role keys (start with eyJ) need Authorization; new sb_secret_ keys must not send it.
-  if (KEY.startsWith('eyJ')) h.Authorization = 'Bearer ' + KEY;
-  return h;
-}
-
-async function rest(path, options) {
-  const r = await fetch(SUPABASE_URL + '/rest/v1/' + path, options);
+async function callScript(payload) {
+  const r = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  });
   const text = await r.text();
-  let body; try { body = text ? JSON.parse(text) : null; } catch { body = text; }
-  if (!r.ok) throw new Error('Supabase ' + r.status + ': ' + (body && body.message ? body.message : text));
-  return body;
+  try { return JSON.parse(text); }
+  catch { throw new Error('Apps Script did not return JSON. Check the deployment is set to "Anyone". Response began: ' + text.slice(0, 120)); }
 }
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
-    if (!KEY) throw new Error('SUPABASE_SECRET_KEY is missing in Vercel environment variables');
+    if (!/^https:\/\/script\.google\.com\//.test(APPS_SCRIPT_URL)) throw new Error('APPS_SCRIPT_URL has not been set in api/rsvp.js');
 
+    // GET /api/rsvp?name=Bapak+Joko  -> has this guest already replied?
     if (req.method === 'GET') {
-      const t = req.query.t;
-      if (!TOKEN_RE.test(t || '')) return res.status(404).json({ error: 'Invitation not found.' });
-      const rows = await rest(`guests?token=eq.${t}&select=name,status,party_size&limit=1`, { headers: headers() });
-      if (!rows.length) return res.status(404).json({ error: 'Invitation not found.' });
-      return res.status(200).json(rows[0]);
+      const name = String(req.query.name || '').trim();
+      if (!name) return res.status(400).json({ error: 'Name is required.' });
+      return res.status(200).json(await callScript({ action: 'lookup', name }));
     }
 
+    // POST /api/rsvp  -> save the reply
     if (req.method === 'POST') {
-      const { token, status, party_size } = req.body || {};
-      if (!TOKEN_RE.test(token || '')) return res.status(404).json({ error: 'Invitation not found.' });
-      if (!['attending', 'declined'].includes(status)) return res.status(400).json({ error: 'Please choose Attending or Regrets.' });
-      const pax = status === 'attending' ? parseInt(party_size, 10) : null;
-      if (status === 'attending' && !(pax >= 1 && pax <= 3)) return res.status(400).json({ error: 'Number of guests must be between 1 and 3.' });
-
-      const rows = await rest(`guests?token=eq.${token}`, {
-        method: 'PATCH',
-        headers: headers({ Prefer: 'return=representation' }),
-        body: JSON.stringify({ status, party_size: pax, responded_at: new Date().toISOString() })
-      });
-      if (!rows.length) return res.status(404).json({ error: 'Invitation not found.' });
-      return res.status(200).json({ ok: true });
+      const { name, status, party_size } = req.body || {};
+      const data = await callScript({ action: 'submit', name, status, party_size });
+      return res.status(data.ok ? 200 : 400).json(data);
     }
 
     res.setHeader('Allow', 'GET, POST');
