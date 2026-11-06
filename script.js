@@ -1,22 +1,26 @@
 (function () {
   const $ = id => document.getElementById(id);
   const params = new URLSearchParams(location.search);
-  const token = (params.get('t') || '').trim();
 
   // ---- Edit these ----
   const MAP_URL = '';                 // paste a Google Maps link when the venue is confirmed
   const GALLERY = [];                 // e.g. ['images/1.jpg','images/2.jpg','images/3.jpg']
   // --------------------
 
-  let guestName = '';
+  // Guest name comes from the link: https://firabaqi-wedding.vercel.app/?to=Bapak%20Joko
+  const linkName = (params.get('to') || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  const form = $('rsvpForm'), err = $('formError'), btn = $('submitBtn'), nameInput = $('guestName');
+  let guestName = linkName;
 
   function setName(name) {
     guestName = name;
     const shown = name || 'Valued Guest';
     $('guestNameCover').textContent = shown;
     $('guestNameLine').textContent = shown;
-    if (name) { $('guestName').value = name; $('guestName').readOnly = !!token; }
   }
+  setName(linkName);
+  if (linkName) { nameInput.value = linkName; nameInput.readOnly = true; }   // locked when it comes from the link
+  else { $('rsvpLede').textContent = 'Please enter your name and let us know whether you can join us.'; }
 
   // Gallery
   const g = $('gallery');
@@ -31,12 +35,9 @@
   const map = $('mapBtn');
   if (MAP_URL) map.href = MAP_URL; else { map.removeAttribute('href'); map.setAttribute('aria-disabled', 'true'); map.textContent = 'Map · to be confirmed'; map.style.opacity = .5; map.style.pointerEvents = 'none'; }
 
-  // Greeting: ?to=Name is used for display only when there is no personal token
-  setName((params.get('to') || '').trim().slice(0, 60));
-
-  // Load the guest by token
-  const form = $('rsvpForm'), err = $('formError'), btn = $('submitBtn');
   function showError(m) { err.textContent = m; err.hidden = false; }
+  function togglePax() { $('paxWrap').hidden = (form.querySelector('input[name=status]:checked') || {}).value !== 'attending'; }
+  form.addEventListener('change', togglePax);
 
   function showThanks(status, pax) {
     form.hidden = true; $('rsvpLede').hidden = true; $('thanks').hidden = false;
@@ -49,50 +50,39 @@
       $('thanksText').textContent = 'We are sorry you cannot join us, and we are grateful for your good wishes.';
     }
   }
+  $('editBtn').addEventListener('click', () => { $('thanks').hidden = true; form.hidden = false; $('rsvpLede').hidden = false; });
 
-  if (token) {
-    fetch('/api/rsvp?t=' + encodeURIComponent(token))
-      .then(r => r.json().then(d => ({ ok: r.ok, d })))
-      .then(({ ok, d }) => {
-        if (!ok) { showError(d.error || 'We could not find your invitation. Please use the link we sent you.'); return; }
-        setName(d.name);
-        if (d.status === 'attending' || d.status === 'declined') {
+  // If this guest has already replied, show their reply (they can still change it)
+  if (linkName) {
+    fetch('/api/rsvp?name=' + encodeURIComponent(linkName))
+      .then(r => r.json())
+      .then(d => {
+        if (d && d.found) {
           const r = form.querySelector('input[value="' + d.status + '"]'); if (r) r.checked = true;
           if (d.party_size) $('pax').value = d.party_size;
-          togglePax();
-          showThanks(d.status, d.party_size);
+          togglePax(); showThanks(d.status, d.party_size);
         }
       })
-      .catch(() => showError('We could not load your invitation. Please check your connection and reload.'));
-  } else {
-    $('rsvpLede').textContent = 'Please open the personal link we sent you to reply.';
-    btn.disabled = true;
+      .catch(() => {});   // a failed lookup should never block the form
   }
-
-  function togglePax() {
-    const v = (form.querySelector('input[name=status]:checked') || {}).value;
-    $('paxWrap').hidden = v !== 'attending';
-  }
-  form.addEventListener('change', togglePax);
-
-  $('editBtn').addEventListener('click', () => { $('thanks').hidden = true; form.hidden = false; $('rsvpLede').hidden = false; });
 
   form.addEventListener('submit', async e => {
     e.preventDefault(); err.hidden = true;
+    const name = nameInput.value.replace(/\s+/g, ' ').trim();
     const checked = form.querySelector('input[name=status]:checked');
-    if (!token) return showError('Please open your personal invitation link to reply.');
+    if (!name) return showError('Please enter your name.');
     if (!checked) return showError('Please choose Attending or Regrets.');
     const status = checked.value, pax = status === 'attending' ? parseInt($('pax').value, 10) : null;
     btn.disabled = true; btn.textContent = 'Sending…';
     try {
       const r = await fetch('/api/rsvp', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, status, party_size: pax }) });
+        body: JSON.stringify({ name, status, party_size: pax }) });
       const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || 'Your reply was not saved. Please try again.');
-      showThanks(status, pax);
+      if (!r.ok || !d.ok) throw new Error(d.error || 'Your reply was not saved. Please try again.');
+      setName(name); showThanks(status, pax);
     } catch (ex) {
       showError(ex.message || 'Your reply was not saved. Please try again.');
-    } finally { btn.disabled = !token; btn.textContent = 'Send reply'; }
+    } finally { btn.disabled = false; btn.textContent = 'Send reply'; }
   });
 
   // Envelope
