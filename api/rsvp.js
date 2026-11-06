@@ -43,4 +43,15 @@ module.exports = async (req, res) => {
         headers: headers({ Prefer: 'return=representation' }),
         body: JSON.stringify({ status, party_size: pax, responded_at: new Date().toISOString() })
       });
-      if
+      if (!rows.length) return res.status(404).json({ error: 'Invitation not found.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    res.setHeader('Allow', 'GET, POST');
+    return res.status(405).json({ error: 'Method not allowed.' });
+  } catch (e) {
+    console.error(e);
+    // Remove "detail" before sending invitations.
+    return res.status(500).json({ error: 'Something went wrong on our side. Please try again shortly.', detail: e.message });
+  }
+};
