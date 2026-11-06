@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fira &amp; Baqi · 13 December 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="locked">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sprig" viewBox="0 0 120 200">
+    <path d="M60 198 C58 140 62 80 60 8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <g fill="currentColor" opacity=".85">
+      <path d="M60 150 C30 144 18 122 16 104 C40 108 58 126 60 150Z"/>
+      <path d="M60 126 C90 120 102 98 104 80 C80 84 62 102 60 126Z"/>
+      <path d="M60 96 C34 90 24 72 22 56 C44 60 58 76 60 96Z"/>
+      <path d="M60 70 C84 64 94 48 96 34 C76 38 62 52 60 70Z"/>
+      <path d="M60 40 C46 34 40 22 40 12 C54 16 60 28 60 40Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- PAGE 1: ENVELOPE -->
+<section id="cover" aria-label="Invitation envelope">
+  <svg class="sprig s-tl" aria-hidden="true"><use href="#sprig"/></svg>
+  <svg class="sprig s-br" aria-hidden="true"><use href="#sprig"/></svg>
+
+  <div class="cover-inner">
+    <p class="small">The wedding of</p>
+    <h1 class="names">Fira <span>&amp;</span> Baqi</h1>
+    <p class="small">Save the date · 13 December 2026</p>
+
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+      <div class="env-card">
+        <p class="small">Dear</p>
+        <p class="card-guest" id="guestNameCover">Valued Guest</p>
+      </div>
+      <div class="env-front"></div>
+      <div class="env-flap"></div>
+      <div class="env-seal" aria-hidden="true">F&amp;B</div>
+    </div>
+
+    <p class="to-line">You are invited, <strong id="guestNameLine">Valued Guest</strong></p>
+    <button class="btn" id="openBtn" type="button">Open invitation</button>
+  </div>
+</section>
+
+<!-- PAGE 2: INVITATION -->
+<main id="invitation" hidden>
+
+  <header class="hero">
+    <div class="portrait" id="portrait">
+      <img src="images/portrait.jpg" alt="Fira and Baqi" onerror="this.remove()">
+      <span class="ph">Portrait photo<br><small>images/portrait.jpg</small></span>
+    </div>
+    <p class="small">We are getting married</p>
+    <h2 class="names big">Fira <span>&amp;</span> Baqi</h2>
+    <p class="date-line">Sunday, 13 December 2026</p>
+  </header>
+
+  <section class="block" id="media">
+    <h3>Our story in pictures</h3>
+    <div class="video-box">
+      <!-- Replace the placeholder with: <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
+      <span class="ph">Wedding video<br><small>embed a YouTube link here</small></span>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="block alt" id="details">
+    <h3>Event details</h3>
+    <dl class="details">
+      <div><dt>Date</dt><dd>13 December 2026</dd></div>
+      <div><dt>Time</dt><dd>11:00 – 13:00 WIB</dd></div>
+      <div><dt>Venue</dt><dd>Venue name to be confirmed<br>Mojokerto, East Java</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="btn ghost" id="mapBtn" href="#" target="_blank" rel="noopener">View map</a>
+      <button class="btn ghost" type="button" disabled>Livestream · to be confirmed</button>
+    </div>
+  </section>
+
+  <section class="block" id="rsvp">
+    <h3>Kindly reply</h3>
+    <p class="lede" id="rsvpLede">Please let us know whether you can join us.</p>
+
+    <form id="rsvpForm" novalidate>
+      <label for="guestName">Name</label>
+      <input id="guestName" type="text" autocomplete="name" required>
+
+      <fieldset>
+        <legend>Will you attend?</legend>
+        <label class="choice"><input type="radio" name="status" value="attending"><span>Attending</span></label>
+        <label class="choice"><input type="radio" name="status" value="declined"><span>Regrets</span></label>
+      </fieldset>
+
+      <div id="paxWrap" hidden>
+        <label for="pax">Number of guests (maximum 3)</label>
+        <select id="pax">
+          <option value="1">1 guest</option>
+          <option value="2">2 guests</option>
+          <option value="3">3 guests</option>
+        </select>
+      </div>
+
+      <p class="msg error" id="formError" role="alert" hidden></p>
+      <button class="btn" id="submitBtn" type="submit">Send reply</button>
+    </form>
+
+    <div class="thanks" id="thanks" hidden>
+      <h4 id="thanksTitle">Thank you</h4>
+      <p id="thanksText"></p>
+      <button class="link" id="editBtn" type="button">Change my reply</button>
+    </div>
+  </section>
+
+  <footer class="block closing">
+    <svg class="sprig sm" aria-hidden="true"><use href="#sprig"/></svg>
+    <p class="closing-text">Your presence and prayers mean the world to us. Thank you for sharing the beginning of our new chapter.</p>
+    <p class="sign">With love,<br><span class="names">Fira &amp; Baqi</span></p>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
