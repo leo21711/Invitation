@@ -65,39 +65,60 @@ h1,h2,h3,h4,p,dl,dd{margin:0}
 #openBtn:hover,#submitBtn:hover{background:var(--terracotta-dark)}
 .link{background:none;border:0;padding:6px;color:var(--terracotta-dark);font-size:18px;font-style:italic;text-decoration:underline;cursor:pointer}
 
-/* PAGE 1 · cover */
+/* PAGE 1 · cover: full-bleed photo with overlay (photo is images/cover.jpg; gradient shows until it exists) */
 #cover{
-  position:fixed;inset:0;z-index:50;overflow-y:auto;overflow-x:hidden;display:flex;
-  background:#D6DCCB;transition:opacity .9s ease,visibility .9s ease;
+  position:fixed;inset:0;z-index:50;overflow-y:auto;overflow-x:hidden;color:var(--cream);
+  background:
+    linear-gradient(180deg,rgba(52,38,28,.6) 0%,rgba(52,38,28,.2) 40%,rgba(52,38,28,.74) 100%),
+    url("images/cover.jpg") center/cover no-repeat,
+    linear-gradient(160deg,#7D8972 0%,#6B7358 55%,#6E4F3C 100%);
+  transition:opacity .9s ease,visibility .9s ease;
 }
 #cover.hide,#cover.hidden,#cover.gone,#cover.out,#cover.opened,#cover.is-open{opacity:0;visibility:hidden;pointer-events:none}
+#cover .sprig{color:var(--gold-light);opacity:.45}
 .cover-inner{
-  position:relative;z-index:1;width:min(92%,420px);margin:auto;padding:34px 22px 30px;
-  background:#EFE9DD;border:1px solid var(--gold);border-radius:24px;box-shadow:0 12px 40px var(--shadow);
+  position:relative;z-index:1;min-height:100%;max-width:440px;margin:0 auto;padding:46px 24px 34px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:24px;
+  text-shadow:0 2px 16px rgba(0,0,0,.35);
 }
-.cover-inner .names{margin:6px 0 2px}
-.cover-inner .date-line{font-size:20px;margin:0 0 4px}
-.to-line{margin:6px 0 18px;font-size:19px;color:var(--brown-soft)}
-.to-line strong{color:var(--terracotta-dark);font-weight:600}
+.cover-head,.cover-foot{display:flex;flex-direction:column;align-items:center;width:100%}
+.cover-inner .small{color:var(--gold-light)}
+.cover-inner .names{margin:10px 0 4px;color:var(--cream);font-size:clamp(48px,15vw,68px)}
+.cover-inner .names span{color:var(--gold)}
+.cover-inner .date-line{margin:0;font-size:21px;color:var(--gold-light)}
+.to-line{margin:4px 0 18px;font-size:19px;color:var(--cream)}
+.to-line strong{color:var(--gold-light);font-weight:600}
+#openBtn{border-color:var(--gold);text-shadow:none}
 
-/* envelope */
-.envelope{position:relative;width:260px;height:168px;margin:26px auto 14px;perspective:900px}
+/* envelope: ivory body, sage flap, gold folds, wax seal */
+.envelope{position:relative;width:min(300px,82vw);aspect-ratio:3/2;margin:96px auto 22px;perspective:900px;text-shadow:none}
 .envelope>*{position:absolute}
-.env-back{inset:0;background:var(--sage-dark);border-radius:6px}
+.env-back{inset:0;border-radius:6px;background:linear-gradient(180deg,#6B7358,#7D8972);box-shadow:0 18px 34px rgba(0,0,0,.38)}
 .env-card{
-  left:14px;right:14px;top:10px;height:136px;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:var(--cream);border:1px solid var(--gold);border-radius:4px;transition:transform .9s ease .35s;
+  left:5%;right:5%;top:6%;height:84%;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--cream);color:var(--brown);border-radius:3px;
+  box-shadow:inset 0 0 0 5px var(--cream),inset 0 0 0 6px var(--gold);
+  transition:transform .9s ease .35s;
 }
-.card-guest{font-family:var(--title);font-style:italic;font-size:22px;color:var(--olive);padding:0 12px;line-height:1.25;overflow-wrap:anywhere}
-.env-front{inset:0;z-index:2;background:var(--sage);border-radius:6px;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%)}
-.env-flap{left:0;right:0;top:0;height:58%;z-index:3;background:#8C987F;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s ease}
+.env-card .small{color:var(--brown-soft);font-size:12px;letter-spacing:4px}
+.card-guest{max-width:88%;padding:0 6px 10px;font-family:var(--title);font-style:italic;font-size:clamp(19px,6vw,24px);line-height:1.25;color:var(--olive);overflow-wrap:anywhere;position:relative}
+.card-guest::after{content:"";position:absolute;left:50%;bottom:0;width:44px;height:1px;margin-left:-22px;background:var(--gold)}
+.env-front{
+  inset:0;z-index:2;border-radius:6px;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);
+  background:
+    linear-gradient(to top right,transparent calc(50% - .7px),var(--gold) 50%,transparent calc(50% + .7px)) 0 100%/50% 42% no-repeat,
+    linear-gradient(to top left,transparent calc(50% - .7px),var(--gold) 50%,transparent calc(50% + .7px)) 100% 100%/50% 42% no-repeat,
+    linear-gradient(180deg,#F6EDDF,#EBDFCB);
+}
+.env-flap{left:0;right:0;top:0;height:58%;z-index:3;background:linear-gradient(180deg,#A5B09A,#8C987F);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s ease}
 .env-seal{
-  left:50%;top:58%;z-index:4;width:48px;height:48px;margin:-24px 0 0 -24px;display:flex;align-items:center;justify-content:center;
-  background:var(--terracotta);color:var(--cream);border:2px solid var(--gold);border-radius:50%;
-  font-family:var(--title);font-style:italic;font-size:15px;box-shadow:0 3px 8px rgba(0,0,0,.2);transition:opacity .4s;
+  left:50%;top:58%;z-index:4;width:54px;height:54px;margin:-27px 0 0 -27px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 35% 30%,#D98A6B,var(--terracotta) 55%,var(--terracotta-dark));color:var(--cream);
+  border-radius:50%;font-family:var(--title);font-style:italic;font-size:16px;
+  box-shadow:0 0 0 2px var(--gold),inset 0 0 0 4px rgba(251,244,234,.22),0 5px 12px rgba(0,0,0,.35);transition:opacity .4s;
 }
 .envelope.open .env-flap,.envelope.is-open .env-flap{transform:rotateX(180deg);z-index:0}
-.envelope.open .env-card,.envelope.is-open .env-card{transform:translateY(-64px)}
+.envelope.open .env-card,.envelope.is-open .env-card{transform:translateY(-62%)}
 .envelope.open .env-seal,.envelope.is-open .env-seal{opacity:0}
 
 /* PAGE 2 · invitation card */
