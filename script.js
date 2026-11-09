@@ -4,11 +4,11 @@
   const token = (params.get('t') || '').trim();
 
   // ---- Edit these ----
-  const MAP_URL = '';        // paste a Google Maps link when the venue is confirmed
-  const YOUTUBE_URL = '';    // paste your full YouTube link here, e.g. 'https://youtu.be/abcDEF12345'
+  const MAP_URL = 'https://maps.app.goo.gl/6wjMzzjG7ea7TJeH7';        // paste a Google Maps link when the venue is confirmed
+  const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=MAOUhPhR_WPVJVLK';    // paste your full YouTube link here, e.g. 'https://youtu.be/abcDEF12345'
   const GALLERY_COUNT = 5;   // number of gallery photos
   const GALLERY = [];        // optional exact paths, e.g. ['images/1.jpg','images/2.jpg']; leave empty to auto-find photo1, image1 or 1 (jpg, jpeg, png, webp) in the images folder
-  const PHOTOBOOTH_URL = '';  // link to your online photobooth ('' hides the button, the QR code still works)
+  const PHOTOBOOTH_URL = 'https://leo21711.github.io/Photobooth/';  // link to your online photobooth ('' hides the button, the QR code still works)
   // --------------------
 
   let guestName = '';
@@ -24,12 +24,21 @@
   // Video: accepts any normal YouTube link (watch, youtu.be, shorts, embed) or the 11-character ID
   function youtubeId(u) {
     u = String(u || '').trim();
-    const m = u.match(/https://youtu.be/hof1Qq7xeYA?si=9ShOELOkmTYzrNLi);
-    return m ? m[1] : (/^[\w-]{11}$/.test(u) ? u : '');
+    if (!u) return '';
+    if (u.length === 11 && u.indexOf('/') < 0 && u.indexOf('.') < 0) return u;
+    try {
+      const x = new URL(u);
+      if (x.hostname.indexOf('youtu.be') > -1) return x.pathname.split('/')[1] || '';
+      const v = x.searchParams.get('v');
+      if (v) return v;
+      const p = x.pathname.split('/');
+      const i = Math.max(p.indexOf('embed'), p.indexOf('shorts'), p.indexOf('live'));
+      return i > -1 ? (p[i + 1] || '') : '';
+    } catch (e) { return ''; }
   }
   const vid = youtubeId(YOUTUBE_URL);
   if (vid) {
-    $('videoBox').innerHTML = '<iframe src="https://www.youtube.com/embed/' + vid + '?rel=0" title="Our story" ' +
+    $('videoBox').innerHTML = '<iframe src="https://www.youtube.com/embed/' + encodeURIComponent(vid) + '?rel=0" title="Our story" ' +
       'allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>';
   }
 
