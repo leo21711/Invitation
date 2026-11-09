@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F8EEE2">
 <title>Fira &amp; Baqi · 13 December 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
@@ -24,16 +25,22 @@
   </symbol>
 </svg>
 
-  
 <!-- PAGE 1: ENVELOPE -->
 <section id="cover" aria-label="Invitation envelope">
   <svg class="sprig s-tl" aria-hidden="true"><use href="#sprig"/></svg>
   <svg class="sprig s-br" aria-hidden="true"><use href="#sprig"/></svg>
 
   <div class="cover-inner">
-    <p class="small">The wedding of</p>
+    <p class="small">The Wedding Celebration</p>
+
+    <!-- Cover photo: save your photo as images/cover.jpg (portrait, about 800 x 1000 px) -->
+    <div class="portrait sm" style="margin-top:18px">
+      <img src="images/cover.jpg" alt="Fira and Baqi" onerror="this.remove()">
+      <span class="ph">Cover photo<small>images/cover.jpg</small></span>
+    </div>
+
     <h1 class="names">Fira <span>&amp;</span> Baqi</h1>
-    <p class="small">Save the date · 13 December 2026</p>
+    <p class="date-line">Sunday, 13 December 2026</p>
 
     <div class="envelope" id="envelope">
       <div class="env-back"></div>
@@ -55,20 +62,30 @@
 <main id="invitation" hidden>
 
   <header class="hero">
+    <p class="bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+    <p class="salam">Assalamu’alaikum Warahmatullahi Wabarakatuh</p>
+    <p class="lede">With the blessings of Allah, we joyfully invite you to celebrate our marriage.</p>
+
+    <!-- Portrait: save your photo as images/portrait.jpg (portrait, about 800 x 1000 px) -->
     <div class="portrait" id="portrait">
       <img src="images/portrait.jpg" alt="Fira and Baqi" onerror="this.remove()">
-      <span class="ph">Portrait photo<br><small>images/portrait.jpg</small></span>
+      <span class="ph">Portrait photo<small>images/portrait.jpg</small></span>
     </div>
-    <p class="small">We are getting married</p>
+
     <h2 class="names big">Fira <span>&amp;</span> Baqi</h2>
     <p class="date-line">Sunday, 13 December 2026</p>
   </header>
 
+  <section class="block" id="verse">
+    <p class="verse">And among His signs is that He created for you partners from among yourselves, that you may find tranquillity in them, and He placed between you love and mercy.
+      <cite>Ar-Rum · 30:21</cite></p>
+  </section>
+
   <section class="block" id="media">
-    <h3>Our story in pictures</h3>
-    <div class="video-box">
-      <!-- Replace the placeholder with: <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
-      <span class="ph">Wedding video<br><small>embed a YouTube link here</small></span>
+    <h3>Our story</h3>
+    <div class="video-box" id="videoBox">
+      <!-- Set YOUTUBE_ID in script.js to replace this placeholder with your video -->
+      <span class="ph">Our memories on video<small>add your YouTube link in script.js</small></span>
     </div>
     <div class="gallery" id="gallery"></div>
   </section>
@@ -76,9 +93,9 @@
   <section class="block alt" id="details">
     <h3>Event details</h3>
     <dl class="details">
-      <div><dt>Date</dt><dd>13 December 2026</dd></div>
-      <div><dt>Time</dt><dd>11:00 – 13:00 WIB</dd></div>
-      <div><dt>Venue</dt><dd>Venue name to be confirmed<br>Mojokerto, East Java</dd></div>
+      <div><dt>Date</dt><dd>Sunday, 13 December 2026</dd></div>
+      <div><dt>Time</dt><dd>11:00 – 13:00 WIB<br><small>Western Indonesia Time (UTC+7)</small></dd></div>
+      <div><dt>Venue</dt><dd>Venue name to be confirmed<br>Mojokerto, East Java, Indonesia</dd></div>
     </dl>
     <div class="actions">
       <a class="btn ghost" id="mapBtn" href="#" target="_blank" rel="noopener">View map</a>
@@ -88,16 +105,16 @@
 
   <section class="block" id="rsvp">
     <h3>Kindly reply</h3>
-    <p class="lede" id="rsvpLede">Please let us know whether you can join us.</p>
+    <p class="lede" id="rsvpLede">Please let us know whether you can join us, so we can prepare a warm welcome for you.</p>
 
     <form id="rsvpForm" novalidate>
-      <label for="guestName">Name</label>
+      <label for="guestName">Your name</label>
       <input id="guestName" type="text" autocomplete="name" required>
 
       <fieldset>
         <legend>Will you attend?</legend>
-        <label class="choice"><input type="radio" name="status" value="attending"><span>Attending</span></label>
-        <label class="choice"><input type="radio" name="status" value="declined"><span>Regrets</span></label>
+        <label class="choice"><input type="radio" name="status" value="attending"><span>Joyfully attending</span></label>
+        <label class="choice"><input type="radio" name="status" value="declined"><span>Regretfully unable</span></label>
       </fieldset>
 
       <div id="paxWrap" hidden>
@@ -120,12 +137,19 @@
     </div>
   </section>
 
-  <footer class="block closing">
+  <footer class="closing">
     <svg class="sprig sm" aria-hidden="true"><use href="#sprig"/></svg>
-    <p class="closing-text">Your presence and prayers mean the world to us. Thank you for sharing the beginning of our new chapter.</p>
-    <p class="sign">With love,<br><span class="names">Fira &amp; Baqi</span></p>
+    <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
+    <p class="sign">With love,<span class="names">Fira &amp; Baqi</span></p>
+    <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
   </footer>
 </main>
+
+<!-- Background music: save your file as audio/music.mp3 -->
+<audio id="bgm" src="audio/music.mp3" loop preload="none"></audio>
+<button class="music-btn" id="musicBtn" type="button" aria-label="Toggle background music">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="slash" d="M3 3l18 18"/></svg>
+</button>
 
 <script src="script.js"></script>
 </body>
