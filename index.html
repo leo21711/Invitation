@@ -26,35 +26,33 @@
 </svg>
 
 <!-- PAGE 1: ENVELOPE -->
+<!-- Cover photo: save your photo as images/cover.jpg (portrait, about 1080 x 1920 px, keep faces in the middle) -->
 <section id="cover" aria-label="Invitation envelope">
   <svg class="sprig s-tl" aria-hidden="true"><use href="#sprig"/></svg>
   <svg class="sprig s-br" aria-hidden="true"><use href="#sprig"/></svg>
 
   <div class="cover-inner">
-    <p class="small">The Wedding Celebration</p>
-
-    <!-- Cover photo: save your photo as images/cover.jpg (portrait, about 800 x 1000 px) -->
-    <div class="portrait sm" style="margin-top:18px">
-      <img src="images/cover.jpg" alt="Fira and Baqi" onerror="this.remove()">
-      <span class="ph">Cover photo<small>images/cover.jpg</small></span>
+    <div class="cover-head">
+      <p class="small">The Wedding Celebration</p>
+      <h1 class="names">Fira <span>&amp;</span> Baqi</h1>
+      <p class="date-line">Sunday, 13 December 2026</p>
     </div>
 
-    <h1 class="names">Fira <span>&amp;</span> Baqi</h1>
-    <p class="date-line">Sunday, 13 December 2026</p>
-
-    <div class="envelope" id="envelope">
-      <div class="env-back"></div>
-      <div class="env-card">
-        <p class="small">Dear</p>
-        <p class="card-guest" id="guestNameCover">Valued Guest</p>
+    <div class="cover-foot">
+      <div class="envelope" id="envelope">
+        <div class="env-back"></div>
+        <div class="env-card">
+          <p class="small">Dear</p>
+          <p class="card-guest" id="guestNameCover">Valued Guest</p>
+        </div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal" aria-hidden="true">F&amp;B</div>
       </div>
-      <div class="env-front"></div>
-      <div class="env-flap"></div>
-      <div class="env-seal" aria-hidden="true">F&amp;B</div>
-    </div>
 
-    <p class="to-line">You are invited, <strong id="guestNameLine">Valued Guest</strong></p>
-    <button class="btn" id="openBtn" type="button">Open invitation</button>
+      <p class="to-line">You are invited, <strong id="guestNameLine">Valued Guest</strong></p>
+      <button class="btn" id="openBtn" type="button">Open invitation</button>
+    </div>
   </div>
 </section>
 
