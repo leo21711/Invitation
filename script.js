@@ -146,29 +146,78 @@
   }
 
   // 7. Envelope Opening & Music
-  $('openBtn').addEventListener('click', () => {
-    $('openBtn').disabled = true;
-    $('envelope').classList.add('open');
-    const audio = $('bgm'), music = $('musicBtn');
-    if (audio && music) { 
-      music.classList.add('show'); 
-      audio.play().catch(() => {}); 
-    }
-    setTimeout(() => {
-      $('cover').classList.add('gone');
-      $('invitation').hidden = false;
-      document.body.classList.remove('locked');
-      window.scrollTo(0, 0);
-    }, 1700);
-  });
+ // Background music: starts on "Open invitation" (browsers require a user tap to play sound).
+const MUSIC_FILES = [
+  'audio/music.mp3',
+  'audio/music.m4a',
+  'audio/music.ogg',
+  'audio/music.wav',
+  'audio/backsound.mp3',
+  'audio/song.mp3'
+];
+const audio = $('bgm');
+const music = $('musicBtn');
+let mi = 0;
+
+function setMusic(on) {
+  if (!music) return;
+  music.classList.toggle('off', !on);
+  music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+}
+
+function playMusic() {
+  if (!audio) return;
+  // Ensure the source is explicitly set to the current fallback index
+  if (!audio.src || audio.src === window.location.href) {
+    audio.src = MUSIC_FILES[mi];
+  }
   
-  // Music Toggle
-  const audio = $('bgm'), music = $('musicBtn');
-  if (audio && music) {
-    audio.volume = 0.5;
-    music.addEventListener('click', () => {
-      if (audio.paused) { audio.play(); music.classList.remove('off'); } 
-      else { audio.pause(); music.classList.add('off'); }
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      setMusic(true);
+    }).catch((error) => {
+      console.warn("Audio play prevented or failed:", error);
+      setMusic(false);
     });
   }
-})();
+}
+
+if (audio && music) {
+  audio.volume = 0.5;
+  
+  // If the current file fails to load, try the next one in the list
+  audio.addEventListener('error', () => {
+    console.warn(`Failed to load audio: ${audio.src}. Trying next fallback...`);
+    mi++;
+    if (mi < MUSIC_FILES.length) {
+      audio.src = MUSIC_FILES[mi];
+      audio.load();
+      playMusic();
+    } else {
+      music.classList.remove('show');
+      console.error("All audio files failed to load. Check file names and paths.");
+    }
+  });
+
+  audio.addEventListener('playing', () => setMusic(true));
+  audio.addEventListener('pause', () => setMusic(false));
+  
+  music.addEventListener('click', () => {
+    if (audio.paused) {
+      if (audio.error) {
+        mi = 0; // Reset to first file if there was an error
+        audio.src = MUSIC_FILES[0];
+        audio.load();
+      }
+      playMusic();
+    } else {
+      audio.pause();
+    }
+  });
+
+  // Pause music when user switches tabs to save resources
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && !audio.paused) audio.pause();
+  });
+}
