@@ -233,5 +233,147 @@
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && !audio.paused) audio.pause();
     });
+
+
+    /* =========================================================
+   GREETINGS / DOA & UCAPAN FUNCTIONALITY
+   ========================================================= */
+
+// 1. Auto-fill greeting name from URL (reuses your existing guest name logic)
+const urlGuestName = new URLSearchParams(window.location.search).get('to') || 
+                     decodeURIComponent(window.location.pathname).replace(/^\/+|\/+$/g, '') || 
+                     'Valued Guest';
+
+const greetingNameInput = document.getElementById('greetingName');
+if (greetingNameInput && urlGuestName && urlGuestName !== 'Valued Guest') {
+  greetingNameInput.value = urlGuestName;
+}
+
+// 2. Google Apps Script Web App URL (REPLACE WITH YOURS)
+const GREETINGS_API_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
+
+const greetingForm = document.getElementById('greetingForm');
+const greetingMessageInput = document.getElementById('greetingMessage');
+const greetingSubmitBtn = document.getElementById('greetingSubmitBtn');
+const greetingError = document.getElementById('greetingError');
+const greetingThanks = document.getElementById('greetingThanks');
+const greetingsList = document.getElementById('greetingsList');
+const greetingsLoading = document.getElementById('greetingsLoading');
+
+// Helper: Escape HTML to prevent XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Helper: Format time ago
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now - date;
+  const mins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  if (mins > 0) return `${mins} minute${mins > 1 ? 's' : ''} ago`;
+  return 'Just now';
+}
+
+// 3. Load Greetings from Google Sheets
+async function loadGreetings() {
+  try {
+    const response = await fetch(`${GREETINGS_API_URL}?action=list`);
+    const data = await response.json();
+    
+    if (greetingsLoading) greetingsLoading.style.display = 'none';
+
+    if (!data.greetings || data.greetings.length === 0) {
+      greetingsList.innerHTML = '<p class="lede" style="text-align: center; font-size: 0.9rem;">Be the first to leave a beautiful message! 💌</p>';
+      return;
+    }
+
+    greetingsList.innerHTML = data.greetings.map(g => `
+      <div class="greeting-item">
+        <div class="greeting-author">${escapeHtml(g.name)}</div>
+        <div class="greeting-time">${timeAgo(g.timestamp)}</div>
+        <div class="greeting-message">${escapeHtml(g.message)}</div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Failed to load greetings:', error);
+    if (greetingsLoading) {
+      greetingsLoading.textContent = 'Unable to load messages. Please try again later.';
+    }
+  }
+}
+
+// 4. Handle Form Submission
+if (greetingForm) {
+  greetingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = greetingNameInput.value.trim();
+    const message = greetingMessageInput.value.trim();
+    
+    if (!name || !message) {
+      greetingError.textContent = 'Please fill in both your name and message.';
+      greetingError.hidden = false;
+      return;
+    }
+
+    greetingError.hidden = true;
+    greetingSubmitBtn.disabled = true;
+    greetingSubmitBtn.textContent = 'Sending...';
+
+    try {
+      // Send to Google Apps Script (no-cors mode is required for GAS web apps)
+      await fetch(GREETINGS_API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add', name, message })
+      });
+
+      // Optimistic UI update: show the new message immediately
+      if (greetingsList.querySelector('.lede')) {
+        greetingsList.innerHTML = ''; // Clear "Be the first" message
+      }
+      
+      const newGreetingHTML = `
+        <div class="greeting-item">
+          <div class="greeting-author">${escapeHtml(name)}</div>
+          <div class="greeting-time">Just now</div>
+          <div class="greeting-message">${escapeHtml(message)}</div>
+        </div>
+      `;
+      greetingsList.insertAdjacentHTML('afterbegin', newGreetingHTML);
+
+      // Reset form and show thanks
+      greetingForm.reset();
+      if (urlGuestName && urlGuestName !== 'Valued Guest') {
+        greetingNameInput.value = urlGuestName; // Restore name
+      }
+      greetingThanks.hidden = false;
+      greetingSubmitBtn.textContent = 'Send Wishes';
+      greetingSubmitBtn.disabled = false;
+
+      // Refresh from server after a short delay to ensure sync
+      setTimeout(loadGreetings, 2000);
+
+    } catch (error) {
+      console.error('Submit error:', error);
+      greetingError.textContent = 'Failed to send. Please check your connection and try again.';
+      greetingError.hidden = false;
+      greetingSubmitBtn.disabled = false;
+      greetingSubmitBtn.textContent = 'Send Wishes';
+    }
+  });
+}
+
+// Load greetings when the page opens
+document.addEventListener('DOMContentLoaded', loadGreetings);
   }
 })();
