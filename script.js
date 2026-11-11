@@ -6,8 +6,6 @@
   const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=Ibb_xZhso-halTkA';
   const GALLERY_COUNT = 5;
   const PHOTOBOOTH_URL = 'https://leo21711.github.io/Photobooth/';
-  
-  // 🔴 USE THIS SINGLE URL FOR BOTH RSVP AND GREETINGS 🔴
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
   
   // ==========================================
@@ -16,14 +14,10 @@
   const params = new URLSearchParams(location.search);
   let guestName = (params.get('to') || '').trim();
   
-  // Fallback to clean path (e.g., /Rio%20Febri)
   if (!guestName) {
     const path = decodeURIComponent(window.location.pathname).replace(/^\/+|\/+$/g, '');
-    if (path && path !== 'index.html') {
-      guestName = path;
-    }
+    if (path && path !== 'index.html') guestName = path;
   }
-  
   if (guestName) {
     try { guestName = decodeURIComponent(guestName); } catch(e) {}
   }
@@ -36,13 +30,10 @@
     if ($('guestNameCover')) $('guestNameCover').textContent = shown;
     if ($('guestNameLine')) $('guestNameLine').textContent = shown;
     if ($('guestNameBody')) $('guestNameBody').textContent = shown;
-    
-    // RSVP Name
     if ($('guestName')) {
       $('guestName').value = shown;
       $('guestName').readOnly = true;
     }
-    // Greetings Name
     if ($('greetingName') && name) {
       $('greetingName').value = name;
     }
@@ -94,14 +85,13 @@
   // ==========================================
   const map = $('mapBtn');
   if (MAP_URL && map) map.href = MAP_URL;
-  
   if (PHOTOBOOTH_URL) { 
     const pb = $('photoboothBtn'); 
     if(pb) { pb.href = PHOTOBOOTH_URL; pb.hidden = false; } 
   }
 
   // ==========================================
-  // 6. RSVP Form Logic & Google Sheets Integration
+  // 6. RSVP Form Logic
   // ==========================================
   const form = $('rsvpForm'), err = $('formError'), btn = $('submitBtn');
   
@@ -145,7 +135,6 @@
     form.addEventListener('submit', async e => {
       e.preventDefault(); 
       err.hidden = true;
-      
       const checked = form.querySelector('input[name=status]:checked');
       if (!checked) return showError('Please choose whether you will attend.');
       
@@ -160,13 +149,8 @@
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Required for GAS
-          body: JSON.stringify({ 
-            action: 'add_rsvp', // Tells the script this is an RSVP
-            name: name, 
-            status: status, 
-            pax: pax 
-          })
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'add_rsvp', name: name, status: status, pax: pax })
         });
         showThanks(status, pax);
       } catch (ex) {
@@ -207,10 +191,7 @@
   // ==========================================
   // 8. Robust Background Music Logic
   // ==========================================
-  const MUSIC_FILES = [
-    'audio/music.mp3', 'audio/music.m4a', 'audio/music.ogg',
-    'audio/music.wav', 'audio/backsound.mp3', 'audio/song.mp3'
-  ];
+  const MUSIC_FILES = ['audio/music.mp3', 'audio/music.m4a', 'audio/music.ogg', 'audio/music.wav', 'audio/backsound.mp3', 'audio/song.mp3'];
   const audio = $('bgm');
   const music = $('musicBtn');
   let mi = 0;
@@ -223,10 +204,7 @@
 
   function playMusic() {
     if (!audio) return;
-    if (!audio.src || audio.src === window.location.href) {
-      audio.src = MUSIC_FILES[mi];
-    }
-    
+    if (!audio.src || audio.src === window.location.href) audio.src = MUSIC_FILES[mi];
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.then(() => setMusic(true)).catch(() => setMusic(false));
@@ -235,42 +213,26 @@
 
   if (audio && music) {
     audio.volume = 0.5;
-    
     audio.addEventListener('error', () => {
       mi++;
-      if (mi < MUSIC_FILES.length) {
-        audio.src = MUSIC_FILES[mi];
-        audio.load();
-        playMusic();
-      } else {
-        music.classList.remove('show');
-      }
+      if (mi < MUSIC_FILES.length) { audio.src = MUSIC_FILES[mi]; audio.load(); playMusic(); } 
+      else { music.classList.remove('show'); }
     });
-
     audio.addEventListener('playing', () => setMusic(true));
     audio.addEventListener('pause', () => setMusic(false));
-    
     music.addEventListener('click', () => {
       if (audio.paused) {
-        if (audio.error) {
-          mi = 0;
-          audio.src = MUSIC_FILES[0];
-          audio.load();
-        }
+        if (audio.error) { mi = 0; audio.src = MUSIC_FILES[0]; audio.load(); }
         playMusic();
-      } else {
-        audio.pause();
-      }
+      } else { audio.pause(); }
     });
-
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && !audio.paused) audio.pause();
     });
   }
 
   // ==========================================
-  // 9. GREETINGS / DOA & UCAPAN FUNCTIONALITY
-  // (Moved OUTSIDE the audio block to ensure it always runs)
+  // 9. GREETINGS / DOA & UCAPAN
   // ==========================================
   const greetingForm = $('greetingForm');
   const greetingMessageInput = $('greetingMessage');
@@ -293,7 +255,6 @@
     const mins = Math.floor(diffMs / 60000);
     const hours = Math.floor(mins / 60);
     const days = Math.floor(hours / 24);
-
     if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
     if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (mins > 0) return `${mins} min ago`;
@@ -304,11 +265,10 @@
     try {
       const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list_greetings`);
       const data = await response.json();
-      
       if (greetingsLoading) greetingsLoading.style.display = 'none';
 
       if (!data.greetings || data.greetings.length === 0) {
-        greetingsList.innerHTML = '<p class="lede" style="text-align: center; font-size: 0.9rem;">Be the first to leave a beautiful message! 💌</p>';
+        greetingsList.innerHTML = '<p class="lede">Be the first to leave a beautiful message! 💌</p>';
         return;
       }
 
@@ -321,16 +281,13 @@
       `).join('');
     } catch (error) {
       console.error('Failed to load greetings:', error);
-      if (greetingsLoading) {
-        greetingsLoading.textContent = 'Unable to load messages.';
-      }
+      if (greetingsLoading) greetingsLoading.textContent = 'Unable to load messages.';
     }
   }
 
   if (greetingForm) {
     greetingForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const name = $('greetingName').value.trim();
       const message = greetingMessageInput.value.trim();
       
@@ -348,21 +305,14 @@
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Required for GAS
-          body: JSON.stringify({ 
-            action: 'add_greeting', // Tells the script this is a greeting
-            name: name, 
-            message: message 
-          })
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'add_greeting', name: name, message: message })
         });
 
-        // Optimistic UI update: show immediately
-        if (greetingsList.querySelector('.lede')) {
-          greetingsList.innerHTML = '';
-        }
+        if (greetingsList.querySelector('.lede')) greetingsList.innerHTML = '';
         
         const newGreetingHTML = `
-          <div class="greeting-item">
+          <div class="greeting-item new-message">
             <div class="greeting-author">${escapeHtml(name)}</div>
             <div class="greeting-time">Just now</div>
             <div class="greeting-message">${escapeHtml(message)}</div>
@@ -370,16 +320,18 @@
         `;
         greetingsList.insertAdjacentHTML('afterbegin', newGreetingHTML);
 
-        // Reset form
+        // Remove animation class after it plays
+        setTimeout(() => {
+          const firstItem = greetingsList.querySelector('.greeting-item');
+          if (firstItem) firstItem.classList.remove('new-message');
+        }, 600);
+
         greetingForm.reset();
-        if (guestName && guestName !== 'Valued Guest') {
-          $('greetingName').value = guestName; // Restore auto-filled name
-        }
+        if (guestName && guestName !== 'Valued Guest') $('greetingName').value = guestName;
         if (greetingThanks) greetingThanks.hidden = false;
         greetingSubmitBtn.disabled = false;
         greetingSubmitBtn.textContent = 'Send Wishes';
 
-        // Refresh from server after delay to ensure sync
         setTimeout(loadGreetings, 2000);
 
       } catch (error) {
@@ -392,7 +344,5 @@
     });
   }
 
-  // Load greetings when the page opens
   document.addEventListener('DOMContentLoaded', loadGreetings);
-
 })();
