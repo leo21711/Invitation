@@ -21,7 +21,7 @@
     
     <div class="cover-inner">
       <div class="cover-head">
-        <p class="eyebrow">The  Wedding Reception & Celebration</p>
+        <p class="eyebrow">The Wedding Reception & Celebration</p>
         <h1 class="names">Fira <span>&</span> Baqi</h1>
         <p class="cdate">Sunday, 13 December 2026</p>
       </div>
@@ -89,7 +89,40 @@
       </blockquote>
     </section>
 
-     <!-- Events -->
+    <!-- ✨ NEW: THE COUPLE SECTION ✨ -->
+    <section class="block alt">
+      <h2 class="sec-title">The Happy Couple</h2>
+      <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      
+      <p class="lede" style="text-align: center; font-style: italic; margin-bottom: 2rem;">
+        With love, gratitude, and humble hearts, we invite you to share in the joy of our wedding celebration.
+      </p>
+      
+      <div class="couple-wrapper" style="display: flex; flex-direction: column; gap: 2rem; text-align: center;">
+        <div class="person-card">
+          <h3 class="names" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Naja Safira Al Faiqah, S.T., M.T.</h3>
+          <p class="text" style="font-size: 0.95rem; line-height: 1.6;">
+            Daughter of<br>
+            <strong>Bambang Handoko Susilo, S.T., M.Kes.</strong><br>
+            &amp; <strong>Dewi Peny Herdianawati, S.E.</strong>
+          </p>
+        </div>
+        
+        <div class="orn" style="transform: rotate(90deg);"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        
+        <div class="person-card">
+          <h3 class="names" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Izzuddin Baqi, S.T.</h3>
+          <p class="text" style="font-size: 0.95rem; line-height: 1.6;">
+            Son of the late<br>
+            <strong>Drs. Noor Hadi, M.Ag., M.Pd.</strong><br>
+            &amp; <strong>Dr. dr. Siti Soekiswati, S.H., M.H., C.Med.</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- ✨ END: THE COUPLE SECTION ✨ -->
+
+    <!-- Events (Save the Date) -->
     <section class="block">
       <h2 class="sec-title">Save the Date</h2>
       <div class="events">
@@ -120,9 +153,7 @@
       <p class="name">Astoria Convention Hall, Mojokerto</p>
       <p class="addr">Jl. Gajah Mada No.61, Mojokerto</p>
       
-      <!-- Embedded Map Preview -->
       <div class="map-embed">
-        <!-- 🔴 INSTRUCTION: Replace the src="..." URL below with your actual Google Maps Embed URL (see guide below) -->
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.5!2d112.4!3d-7.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjQnMDAuMCJTIDExMsKwMjQnMDAuMCJF!5e0!3m2!1sen!2sid!4v1600000000000!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
 
@@ -138,7 +169,6 @@
       <div class="story-card">
         <p class="text">Two hearts, one journey, towards a life together in His pleasure.</p>
         <div class="video-box" id="videoBox">
-          <!-- YouTube iframe injected by JS -->
           <div class="ph">Our memories on video<small>add your YouTube link in script.js</small></div>
         </div>
       </div>
@@ -207,21 +237,46 @@
       <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden>Open the photobooth</a>
     </section>
 
+    <!-- ✨ NEW: GREETINGS / DOA & UCAPAN SECTION ✨ -->
+    <section class="block" id="greetingsSection">
+      <h2 class="sec-title">Doa &amp; Ucapan</h2>
+      <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      <p class="lede" style="text-align: center;">Send your prayers and wishes to the happy couple.</p>
+      
+      <form id="greetingForm" style="max-width: 500px; margin: 0 auto;">
+        <label for="greetingName">Your name</label>
+        <input type="text" id="greetingName" name="greetingName" required maxlength="100">
+        
+        <label for="greetingMessage" style="margin-top: 1rem; display: block;">Your message / prayer</label>
+        <textarea id="greetingMessage" name="greetingMessage" rows="4" required maxlength="500"></textarea>
+        
+        <p class="msg error" id="greetingError" hidden></p>
+        <button type="submit" id="greetingSubmitBtn" class="btn" style="margin-top: 1rem; width: 100%;">Send Wishes</button>
+      </form>
+
+      <div id="greetingThanks" class="thanks" hidden style="text-align: center; margin-top: 1rem;">
+        <h4>Thank you for your beautiful wishes!</h4>
+      </div>
+
+      <div class="greetings-list" id="greetingsList">
+        <p class="lede" style="text-align: center; font-size: 0.9rem;" id="greetingsLoading">Loading messages...</p>
+        <!-- Messages will be injected here by JavaScript -->
+      </div>
+    </section>
+    <!-- ✨ END: GREETINGS SECTION ✨ -->
+
     <!-- Closing -->
     <section class="closing block">
       <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
       <p class="sign">With love,<br><span class="names">Fira <span>&</span> Baqi</span></p>
       <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
-      <p ></p>
-      <p class="wassalam">music by Dengarkan Dia - Bersenyawa</p>
+      <p class="wassalam" style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.8;">music by Dengarkan Dia - Bersenyawa</p>
     </section>
   </main>
-
 
   <!-- Audio -->
   <audio id="bgm" loop preload="auto">
     <source src="audio/music.mp3" type="audio/mpeg">
-    
   </audio>
   <button id="musicBtn" class="music-btn" aria-label="Play music">
     <svg class="ic-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
