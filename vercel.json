@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/:slug", "destination": "/?to=:slug" }
+    {
+      "source": "/:path((?!.*\\.).+)",
+      "destination": "/?to=:path"
+    }
   ]
 }
