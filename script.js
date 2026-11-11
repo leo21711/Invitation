@@ -2,7 +2,7 @@
    1. CONFIGURATION
    ========================================================= */
 // Replace with your actual Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
 
 /* =========================================================
    2. URL PERSONALIZATION (Guest Name)
