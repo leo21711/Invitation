@@ -193,3 +193,22 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   .hero,.block{padding-left:16px;padding-right:16px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+
+/* --- ADD THIS TO YOUR EXISTING style.css --- */
+
+/* Elegant styling for the locked RSVP name field */
+#rsvpForm input[readonly] {
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--olive);
+  font-style: italic;
+  font-weight: 600;
+  cursor: default;
+  border-color: var(--gold-light);
+  box-shadow: none;
+}
+
+#rsvpForm input[readonly]:focus {
+  outline: none;
+  border-color: var(--gold-light);
+}
