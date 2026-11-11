@@ -280,10 +280,10 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 }
 .event.highlight .label {
   color: var(--terracotta-dark);
-  font-weight: 700;
+  font-weight: 750;
   letter-spacing: 5px;
 }
 .event.highlight p:not(.label) {
-  font-weight: 600;
+  font-weight: 650;
   color: var(--brown);
 }
