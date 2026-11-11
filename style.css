@@ -248,3 +248,42 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   width: 100%;
   height: 300px;
 }
+
+/* --- ADD THIS TO THE BOTTOM OF style.css --- */
+
+/* 1. Change Events from side-by-side to top-and-bottom */
+.events {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto 26px;
+}
+
+/* 2. Change the vertical line into a horizontal divider */
+.vline {
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--terracotta), transparent);
+  opacity: 0.6;
+}
+
+/* 3. Add the elegant highlight frame for Resepsi */
+.event.highlight {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 20px 16px;
+  box-shadow: 0 4px 16px rgba(217, 185, 140, 0.25);
+  width: 100%;
+}
+.event.highlight .label {
+  color: var(--terracotta-dark);
+  font-weight: 700;
+  letter-spacing: 5px;
+}
+.event.highlight p:not(.label) {
+  font-weight: 600;
+  color: var(--brown);
+}
