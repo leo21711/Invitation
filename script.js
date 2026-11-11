@@ -1,27 +1,37 @@
+
 (function () {
   const $ = id => document.getElementById(id);
+  
+  // 🔴 --- CONFIGURATION: UPDATE THESE VARIABLES --- 🔴
+  const MAP_URL = 'https://maps.app.goo.gl/jzW97oWrjWaQR2Rt7?g_st=ic';        // Paste your Google Maps link here
+  const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=Ibb_xZhso-halTkA';    // Paste your YouTube link here
+  const GALLERY_COUNT = 5;   // Number of gallery photos
+  const PHOTOBOOTH_URL = 'https://leo21711.github.io/Photobooth/'; // Link to your online photobooth
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec'; // 🔴 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+  
+  
+  // 1. Parse Guest Name from URL (?to=Rio%20Febri or /Rio%20Febri)
   const params = new URLSearchParams(location.search);
-  const token = (params.get('t') || '').trim();
-
-  // ---- Edit these ----
-  const MAP_URL = 'https://maps.app.goo.gl/jzW97oWrjWaQR2Rt7?g_st=ic';        // paste a Google Maps link when the venue is confirmed
-  const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=Ibb_xZhso-halTkA';    // paste your full YouTube link here, e.g. 'https://youtu.be/abcDEF12345'
-  const GALLERY_COUNT = 5;   // number of gallery photos
-  const GALLERY = [];        // optional exact paths, e.g. ['images/1.jpg','images/2.jpg']; leave empty to auto-find photo1, image1 or 1 (jpg, jpeg, png, webp) in the images folder
-  const PHOTOBOOTH_URL = '';  // link to your online photobooth ('' hides the button, the QR code still works)
-  // --------------------
-
-  let guestName = '';
-
-  function setName(name) {
-    guestName = name;
-    const shown = name || 'Valued Guest';
-    $('guestNameCover').textContent = shown;
-    $('guestNameLine').textContent = shown;
-    if (name) { $('guestName').value = name; $('guestName').readOnly = !!token; }
+  let guestName = (params.get('to') || '').trim();
+  if (guestName) {
+    try { guestName = decodeURIComponent(guestName); } catch(e) {}
   }
 
-  // Video: accepts any normal YouTube link (watch, youtu.be, shorts, embed) or the 11-character ID
+  // 2. Populate Guest Name & Lock RSVP Field
+  function setName(name) {
+    const shown = name || 'Valued Guest';
+    if ($('guestNameCover')) $('guestNameCover').textContent = shown;
+    if ($('guestNameLine')) $('guestNameLine').textContent = shown;
+    if ($('guestNameBody')) $('guestNameBody').textContent = shown;
+    
+    if ($('guestName')) {
+      $('guestName').value = shown;
+      $('guestName').readOnly = true; // Lock the field
+    }
+  }
+  setName(guestName);
+
+  // 3. YouTube Video Embed
   function youtubeId(u) {
     u = String(u || '').trim();
     if (!u) return '';
@@ -36,152 +46,114 @@
       return i > -1 ? (p[i + 1] || '') : '';
     } catch (e) { return ''; }
   }
+  
   const vid = youtubeId(YOUTUBE_URL);
-  if (vid) {
-    $('videoBox').innerHTML = '<iframe src="https://www.youtube.com/embed/' + encodeURIComponent(vid) + '?rel=0" title="Our story" ' +
-      'allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>';
+  if (vid && $('videoBox')) {
+    $('videoBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(vid)}?rel=0" title="Our story" allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>`;
   }
 
-  // Gallery: tries the likely file names in order; a soft placeholder shows until a photo is found
-  function candidates(n) {
-    if (GALLERY[n - 1]) return [GALLERY[n - 1]];
-    const out = [];
-    ['photo' + n, 'image' + n, '' + n].forEach(b => ['jpg', 'jpeg', 'png', 'webp', 'JPG'].forEach(e => out.push('images/' + b + '.' + e)));
-    return out;
-  }
+  // 4. Gallery Auto-loader
   const g = $('gallery');
-  for (let n = 1; n <= GALLERY_COUNT; n++) {
-    const list = candidates(n);
-    const f = document.createElement('figure');
-    f.className = 'tile';
-    const ph = document.createElement('span');
-    ph.className = 'ph';
-    ph.innerHTML = 'Photo ' + n + '<small>images/photo' + n + '.jpg</small>';
-    f.appendChild(ph);
-    const im = new Image();
-    let k = 0;
-    im.alt = 'Fira and Baqi, photo ' + n;
-    im.onerror = () => { k++; if (k < list.length) im.src = list[k]; else im.remove(); };
-    im.src = list[0];
-    f.appendChild(im);
-    g.appendChild(f);
+  if (g) {
+    for (let n = 1; n <= GALLERY_COUNT; n++) {
+      const f = document.createElement('figure');
+      f.className = 'tile';
+      const im = new Image();
+      im.alt = `Fira and Baqi, photo ${n}`;
+      im.src = `images/photo${n}.jpg`;
+      im.onerror = () => { im.src = `images/image${n}.jpg`; };
+      f.appendChild(im);
+      g.appendChild(f);
+    }
   }
 
-  // Photobooth button
-  if (PHOTOBOOTH_URL) { const pb = $('photoboothBtn'); pb.href = PHOTOBOOTH_URL; pb.hidden = false; }
-
-  // Placeholder captions ("Portrait photo", "QR code"...) are removed as soon as the real photo has loaded
-  document.querySelectorAll('.ph').forEach(ph => {
-    const img = ph.parentElement.querySelector('img');
-    if (!img) return;
-    const done = () => ph.remove();
-    if (img.complete && img.naturalWidth) done(); else img.addEventListener('load', done);
-  });
-
-  // Map button
+  // 5. Map & Photobooth Buttons
   const map = $('mapBtn');
-  if (MAP_URL) map.href = MAP_URL; else { map.removeAttribute('href'); map.setAttribute('aria-disabled', 'true'); map.textContent = 'Map · to be confirmed'; map.style.opacity = .5; map.style.pointerEvents = 'none'; }
+  if (MAP_URL && map) map.href = MAP_URL;
+  
+  if (PHOTOBOOTH_URL) { 
+    const pb = $('photoboothBtn'); 
+    if(pb) { pb.href = PHOTOBOOTH_URL; pb.hidden = false; } 
+  }
 
-  // Greeting: ?to=Name is used for display only when there is no personal token
-  setName((params.get('to') || '').trim().slice(0, 60));
-
-  // Load the guest by token
+  // 6. RSVP Form Logic & Google Sheets Integration
   const form = $('rsvpForm'), err = $('formError'), btn = $('submitBtn');
-  function showError(m) { err.textContent = m; err.hidden = false; }
-
+  
+  function showError(m) { 
+    if(err) { err.textContent = m; err.hidden = false; } 
+  }
+  
   function showThanks(status, pax) {
-    form.hidden = true; $('rsvpLede').hidden = true; $('thanks').hidden = false;
+    form.hidden = true; 
+    $('rsvpLede').hidden = true; 
+    $('thanks').hidden = false;
     const n = guestName ? ', ' + guestName : '';
+    
     if (status === 'attending') {
       $('thanksTitle').textContent = 'Thank you' + n;
-      $('thanksText').textContent = 'We have noted ' + pax + (pax > 1 ? ' guests' : ' guest') + ' for 13 December 2026. We look forward to celebrating with you, insha’Allah.';
+      $('thanksText').textContent = `We have noted ${pax} ${pax > 1 ? 'guests' : 'guest'} for 13 December 2026. We look forward to celebrating with you, insha’Allah.`;
     } else {
       $('thanksTitle').textContent = 'Thank you for letting us know' + n;
       $('thanksText').textContent = 'We are sorry you cannot join us, and we are grateful for your prayers and good wishes.';
     }
   }
 
-  if (token) {
-    fetch('/api/rsvp?t=' + encodeURIComponent(token))
-      .then(r => r.json().then(d => ({ ok: r.ok, d })))
-      .then(({ ok, d }) => {
-        if (!ok) { showError(d.error || 'We could not find your invitation. Please use the link we sent you.'); return; }
-        setName(d.name);
-        if (d.status === 'attending' || d.status === 'declined') {
-          const r = form.querySelector('input[value="' + d.status + '"]'); if (r) r.checked = true;
-          if (d.party_size) $('pax').value = d.party_size;
-          togglePax();
-          showThanks(d.status, d.party_size);
-        }
-      })
-      .catch(() => showError('We could not load your invitation. Please check your connection and reload.'));
-  } else {
-    $('rsvpLede').textContent = 'Please open the personal link we sent you to reply.';
-    btn.disabled = true;
-  }
-
   function togglePax() {
     const v = (form.querySelector('input[name=status]:checked') || {}).value;
     $('paxWrap').hidden = v !== 'attending';
   }
-  form.addEventListener('change', togglePax);
-
-  $('editBtn').addEventListener('click', () => { $('thanks').hidden = true; form.hidden = false; $('rsvpLede').hidden = false; });
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault(); err.hidden = true;
-    const checked = form.querySelector('input[name=status]:checked');
-    if (!token) return showError('Please open your personal invitation link to reply.');
-    if (!checked) return showError('Please choose whether you will attend.');
-    const status = checked.value, pax = status === 'attending' ? parseInt($('pax').value, 10) : null;
-    btn.disabled = true; btn.textContent = 'Sending…';
-    try {
-      const r = await fetch('/api/rsvp', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, status, party_size: pax }) });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || 'Your reply was not saved. Please try again.');
-      showThanks(status, pax);
-    } catch (ex) {
-      showError(ex.message || 'Your reply was not saved. Please try again.');
-    } finally { btn.disabled = !token; btn.textContent = 'Send reply'; }
-  });
-
-  // Background music: starts on "Open invitation" (browsers only allow sound after a tap).
-  // Looks for audio/music.mp3 first, then these alternatives, using the first one that exists.
-  const MUSIC = ['audio/music.mp3', 'audio/music.m4a', 'audio/music.ogg', 'audio/music.wav', 'audio/backsound.mp3', 'audio/song.mp3'];
-  const audio = $('bgm'), music = $('musicBtn');
-  let mi = 0;
-  function setMusic(on) {
-    music.classList.toggle('off', !on);
-    music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
-  }
-  function playMusic() {
-    const p = audio.play();
-    if (p && p.then) p.then(() => setMusic(true)).catch(() => setMusic(false));
-  }
-  if (audio && music) {
-    audio.volume = 0.5;
-    audio.addEventListener('error', () => {
-      mi++;
-      if (mi < MUSIC.length) { audio.src = MUSIC[mi]; audio.load(); playMusic(); }
-      else music.classList.remove('show');
+  
+  if(form) {
+    form.addEventListener('change', togglePax);
+    $('editBtn').addEventListener('click', () => { 
+      $('thanks').hidden = true; 
+      form.hidden = false; 
+      $('rsvpLede').hidden = false; 
     });
-    audio.addEventListener('playing', () => setMusic(true));
-    audio.addEventListener('pause', () => setMusic(false));
-    music.addEventListener('click', () => {
-      if (audio.paused) {
-        if (audio.error) { mi = 0; audio.src = MUSIC[0]; audio.load(); }
-        playMusic();
-      } else audio.pause();
+    
+    form.addEventListener('submit', async e => {
+      e.preventDefault(); 
+      err.hidden = true;
+      
+      const checked = form.querySelector('input[name=status]:checked');
+      if (!checked) return showError('Please choose whether you will attend.');
+      
+      const status = checked.value;
+      const pax = status === 'attending' ? parseInt($('pax').value, 10) : 0;
+      const name = $('guestName').value;
+      
+      btn.disabled = true; 
+      btn.textContent = 'Sending…';
+      
+      try {
+        // Send to Google Apps Script
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Required for Google Apps Script CORS handling
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ name, status, party_size: pax })
+        });
+        
+        // Optimistic UI update (since no-cors doesn't return readable response)
+        showThanks(status, pax);
+      } catch (ex) {
+        showError('Network error. Please check your connection and try again.');
+      } finally { 
+        btn.disabled = false; 
+        btn.textContent = 'Send reply'; 
+      }
     });
-    document.addEventListener('visibilitychange', () => { if (document.hidden && !audio.paused) audio.pause(); });
   }
 
-  // Envelope
+  // 7. Envelope Opening & Music
   $('openBtn').addEventListener('click', () => {
     $('openBtn').disabled = true;
     $('envelope').classList.add('open');
-    if (audio && music) { music.classList.add('show'); setMusic(false); playMusic(); }
+    const audio = $('bgm'), music = $('musicBtn');
+    if (audio && music) { 
+      music.classList.add('show'); 
+      audio.play().catch(() => {}); 
+    }
     setTimeout(() => {
       $('cover').classList.add('gone');
       $('invitation').hidden = false;
@@ -189,4 +161,14 @@
       window.scrollTo(0, 0);
     }, 1700);
   });
+  
+  // Music Toggle
+  const audio = $('bgm'), music = $('musicBtn');
+  if (audio && music) {
+    audio.volume = 0.5;
+    music.addEventListener('click', () => {
+      if (audio.paused) { audio.play(); music.classList.remove('off'); } 
+      else { audio.pause(); music.classList.add('off'); }
+    });
+  }
 })();
