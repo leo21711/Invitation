@@ -212,3 +212,39 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   outline: none;
   border-color: var(--gold-light);
 }
+
+
+/* --- ADD THIS TO THE BOTTOM OF style.css --- */
+
+/* Highlight styling for Resepsi */
+.event.highlight {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 18px 12px;
+  box-shadow: 0 4px 16px rgba(217, 185, 140, 0.25);
+}
+.event.highlight .label {
+  color: var(--terracotta-dark);
+  font-weight: 700;
+  letter-spacing: 5px;
+}
+.event.highlight p:not(.label) {
+  font-weight: 600;
+  color: var(--brown);
+}
+
+/* Embedded Map Styling */
+.map-embed {
+  max-width: 520px;
+  margin: 0 auto 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--gold-light);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+.map-embed iframe {
+  display: block;
+  width: 100%;
+  height: 300px;
+}
