@@ -1,202 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#FBF0E3">
-<title>Fira &amp; Baqi · 13 December 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="deco.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fira & Baqi · 13 December 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="deco.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="leaf" viewBox="0 0 40 22"><path d="M20 20C12 18 5 12 3 4c9 1 16 6 17 16z" fill="#8C987F"/><path d="M20 20c8-2 15-8 17-16-9 1-16 6-17 16z" fill="#C98B68"/><path d="M20 21V9" stroke="#8C987F" stroke-width="1" fill="none"/></symbol>
-  <symbol id="sprig" viewBox="0 0 120 200">
-    <path d="M60 198C58 140 62 80 60 8" fill="none" stroke="currentColor" stroke-width="1.5"/>
-    <g fill="currentColor">
-      <path d="M60 150C30 144 18 122 16 104c24 4 42 22 44 46z"/><path d="M60 126c30-6 42-28 44-46-24 4-42 22-44 46z"/>
-      <path d="M60 96C34 90 24 72 22 56c22 4 36 20 38 40z"/><path d="M60 70c24-6 34-22 36-36-20 4-34 18-36 36z"/>
-      <path d="M60 40C46 34 40 22 40 12c14 4 20 16 20 28z"/>
-    </g>
-  </symbol>
-</svg>
-
-<!-- PAGE 1: ENVELOPE · cover photo: save as images/cover.jpg (portrait, about 1080 x 1920 px) -->
-<section id="cover" aria-label="Invitation envelope">
-  <i class="deco d-tl"></i><i class="deco d-tr"></i><i class="deco d-bl"></i><i class="deco d-br"></i>
-
-  <div class="cover-inner">
-    <div class="cover-head">
-      <p class="eyebrow">The Wedding Celebration</p>
-      <h1 class="names">Fira <span>&amp;</span> Baqi</h1>
-      <div class="orn"><svg aria-hidden="true"><use href="#leaf"/></svg></div>
-      <p class="cdate">Sunday, 13 December 2026</p>
-    </div>
-
-    <div class="cover-foot">
+  <!-- COVER PAGE -->
+  <div id="cover">
+    <div class="deco d-tl"></div>
+    <div class="deco d-tr"></div>
+    <div class="deco d-bl"></div>
+    <div class="deco d-br"></div>
+    
+    <div class="cover-inner">
+      <div class="cover-head">
+        <p class="eyebrow">The Wedding Celebration</p>
+        <h1 class="names">Fira <span>&</span> Baqi</h1>
+        <p class="cdate">Sunday, 13 December 2026</p>
+      </div>
+      
       <div class="envelope" id="envelope">
         <div class="env-back"></div>
         <div class="env-card">
-          <p class="small">Dear</p>
-          <p class="card-guest" id="guestNameCover">Valued Guest</p>
+          <p class="small">The Wedding Celebration</p>
+          <h2 class="names" style="font-size: clamp(32px, 10vw, 48px);">Fira <span>&</span> Baqi</h2>
+          <p class="card-guest" id="guestNameLine">Valued Guest</p>
         </div>
-        <div class="env-front"><i class="deco d-ml e-bl"></i><i class="deco d-mr e-tr"></i></div>
+        <div class="env-front">
+          <div class="deco e-bl d-bl"></div>
+          <div class="deco e-tr d-tr"></div>
+        </div>
         <div class="env-flap">
-          <svg class="f1" viewBox="0 0 120 200" aria-hidden="true"><use href="#sprig"/></svg>
-          <svg class="f2" viewBox="0 0 120 200" aria-hidden="true"><use href="#sprig"/></svg>
+          <svg class="f1" viewBox="0 0 100 100"><path d="M0,0 L100,100 M100,0 L0,100" stroke="currentColor" stroke-width="2"/></svg>
+          <svg class="f2" viewBox="0 0 100 100"><path d="M0,0 L100,100 M100,0 L0,100" stroke="currentColor" stroke-width="2"/></svg>
         </div>
-        <div class="env-seal" aria-hidden="true">F&amp;B<svg viewBox="0 0 40 22"><use href="#leaf"/></svg></div>
+        <div class="env-seal">
+          <span>F&B</span>
+          <svg viewBox="0 0 24 24"><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z" fill="currentColor"/></svg>
+        </div>
       </div>
 
-      <div class="orn"><svg aria-hidden="true"><use href="#leaf"/></svg></div>
-      <p class="to-line">You are invited, <strong id="guestNameLine">Valued Guest</strong></p>
-      <button class="btn open-btn" id="openBtn" type="button">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
-        <i class="sep"></i><span>Open Invitation</span>
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="m9 6 6 6-6 6"/></svg>
-      </button>
+      <div class="cover-foot">
+        <p class="to-line">Dear <strong id="guestNameCover">Valued Guest</strong></p>
+        <button id="openBtn" class="btn open-btn">
+          Open Invitation 
+          <span class="sep"></span> 
+          <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- PAGE 2: INVITATION -->
-<main id="invitation" hidden>
+  <!-- MAIN INVITATION -->
+  <main id="invitation" hidden>
+    <div class="deco d-tl"></div>
+    <div class="deco d-tr"></div>
+    <div class="deco d-bl"></div>
+    <div class="deco d-br"></div>
 
-  <header class="hero">
-    <i class="deco d-tl"></i><i class="deco d-tr"></i>
-    <p class="bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-    <p class="eyebrow">The Wedding Celebration</p>
-    <h2 class="names">Fira <span>&amp;</span> Baqi</h2>
-    <p class="date-line">Sunday, 13 December 2026</p>
-    <div class="orn"><svg aria-hidden="true"><use href="#leaf"/></svg></div>
+    <!-- Hero -->
+    <section class="hero block">
+      <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="eyebrow">The Wedding Celebration</p>
+      <h1 class="names">Fira <span>&</span> Baqi</h1>
+      <p class="date-line">Sunday, 13 December 2026</p>
+      <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      <p class="lede">You are invited, <strong id="guestNameBody">Valued Guest</strong></p>
+    </section>
 
-    <!-- Portrait: save as images/portrait.jpg (portrait, about 800 x 1000 px) -->
-    <div class="portrait-wrap">
-      <div class="portrait" id="portrait">
-        <img src="images/portrait.jpg" alt="Fira and Baqi" onerror="this.remove()">
-        <span class="ph">Portrait photo<small>images/portrait.jpg</small></span>
+    <!-- Portrait & Verse -->
+    <section class="block alt">
+      <div class="portrait-wrap">
+        <div class="portrait">
+          <img src="images/portrait.jpg" alt="Fira and Baqi">
+        </div>
+        <div class="deco pf d-br"></div>
       </div>
-      <i class="deco d-ml pf"></i>
-    </div>
+      <blockquote class="verse">
+        “And We created you in pairs”
+        <cite>Q.S. An-Naba : 8</cite>
+      </blockquote>
+    </section>
 
-    <p class="verse">“And We created you in pairs”<cite>(Q.S. An-Naba : 8)</cite></p>
-    <div class="orn"><svg aria-hidden="true"><use href="#leaf"/></svg></div>
-  </header>
+    <!-- Events -->
+    <section class="block">
+      <h2 class="sec-title">Save the Date</h2>
+      <div class="events">
+        <div class="event">
+          <svg class="i" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+          <p class="label">Akad Nikah</p>
+          <p>13 December 2026<br>08.00 – 10.00 WIB</p>
+        </div>
+        <div class="vline"></div>
+        <div class="event">
+          <svg class="i" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+          <p class="label">Resepsi</p>
+          <p>13 December 2026<br>11.00 – 14.00 WIB</p>
+        </div>
+      </div>
+    </section>
 
-  <section class="block" id="details">
-    <div class="events">
-      <div class="event">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4M8 14h2M12 14h2M8 17h2"/></svg>
-        <p class="label">Akad Nikah</p>
-        <p>13 December 2026</p>
-        <p>08.00 – 10.00 WIB</p>
-      </div>
-      <div class="vline"></div>
-      <div class="event">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-        <p class="label">Resepsi</p>
-        <p>13 December 2026</p>
-        <p>11.00 – 14.00 WIB</p>
-      </div>
-    </div>
-    <div class="venue">
-      <svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--olive)"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6h6v6M3 10l9-6 9 6z"/></svg>
-      <p class="label">The Venue</p>
+    <!-- Venue -->
+    <section class="block alt venue">
+      <h2 class="sec-title">The Venue</h2>
       <p class="name">Astoria Convention Hall, Mojokerto</p>
       <p class="addr">Jl. Gajah Mada No.61, Mojokerto</p>
-      <a class="btn ghost" id="mapBtn" href="#" target="_blank" rel="noopener">View map</a>
-    </div>
-  </section>
+      <a href="#" id="mapBtn" class="btn ghost" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        View map
+      </a>
+    </section>
 
-  <section class="block" id="story">
-    <i class="deco d-ml m-l"></i>
-    <div class="story-card">
-      <h3 class="sec-title">Our Story</h3>
-      <p class="text">Two hearts, one journey, towards a life together in His pleasure.</p>
-      <div class="video-box" id="videoBox">
-        <!-- Add your YouTube link at the top of script.js -->
-        <span class="ph">Our memories on video<small>add your YouTube link in script.js</small></span>
+    <!-- Story & Video -->
+    <section class="block">
+      <h2 class="sec-title">Our Story</h2>
+      <div class="story-card">
+        <p class="text">Two hearts, one journey, towards a life together in His pleasure.</p>
+        <div class="video-box" id="videoBox">
+          <!-- YouTube iframe injected by JS -->
+          <div class="ph">Our memories on video<small>add your YouTube link in script.js</small></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="block" id="rsvp">
-    <i class="deco d-mr m-r"></i>
-    <h3 class="sec-title">RSVP</h3>
-    <p class="lede" id="rsvpLede">Kindly confirm your attendance before 1 December 2026.</p>
+    <!-- RSVP -->
+    <section class="block alt" id="rsvpSection">
+      <h2 class="sec-title">RSVP</h2>
+      <p class="lede" id="rsvpLede">Kindly confirm your attendance before 1 December 2026.</p>
+      
+      <form id="rsvpForm">
+        <label for="guestName">Your name</label>
+        <input type="text" id="guestName" name="guestName" readonly>
+        
+        <fieldset>
+          <legend>Will you attend?</legend>
+          <label class="choice">
+            <input type="radio" name="status" value="attending" id="statusAttending">
+            <span>Joyfully attending</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="status" value="declined" id="statusDeclined">
+            <span>Regretfully unable</span>
+          </label>
+        </fieldset>
 
-    <form id="rsvpForm" novalidate>
-      <label for="guestName">Your name</label>
-      <input id="guestName" type="text" autocomplete="name" required>
+        <div id="paxWrap" hidden>
+          <label for="pax">Number of guests (maximum 3)</label>
+          <select id="pax" name="pax">
+            <option value="1">1 guest</option>
+            <option value="2">2 guests</option>
+            <option value="3">3 guests</option>
+          </select>
+        </div>
 
-      <fieldset>
-        <legend>Will you attend?</legend>
-        <label class="choice"><input type="radio" name="status" value="attending"><span>Joyfully attending</span></label>
-        <label class="choice"><input type="radio" name="status" value="declined"><span>Regretfully unable</span></label>
-      </fieldset>
+        <p class="msg error" id="formError" hidden></p>
+        <button type="submit" id="submitBtn" class="btn">Send reply</button>
+      </form>
 
-      <div id="paxWrap" hidden>
-        <label for="pax">Number of guests (maximum 3)</label>
-        <select id="pax">
-          <option value="1">1 guest</option>
-          <option value="2">2 guests</option>
-          <option value="3">3 guests</option>
-        </select>
+      <div id="thanks" class="thanks" hidden>
+        <h4 id="thanksTitle">Thank you</h4>
+        <p id="thanksText"></p>
+        <button type="button" id="editBtn" class="link">Change my reply</button>
       </div>
+    </section>
 
-      <p class="msg error" id="formError" role="alert" hidden></p>
-      <button class="btn" id="submitBtn" type="submit">Send reply</button>
-    </form>
+    <!-- Gallery -->
+    <section class="block">
+      <h2 class="sec-title">Our Gallery</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
 
-    <div class="thanks" id="thanks" hidden>
-      <h4 id="thanksTitle">Thank you</h4>
-      <p id="thanksText"></p>
-      <button class="link" id="editBtn" type="button">Change my reply</button>
-    </div>
-  </section>
+    <!-- Photobooth -->
+    <section class="block alt">
+      <h2 class="sec-title">Memory Booth</h2>
+      <p class="lede">Join us at the reception and take a photo in our wedding frames, a small keepsake of the day you shared with us.</p>
+      <div class="qr">
+        <img src="images/photobooth-qr.png" alt="Photobooth QR Code">
+      </div>
+      <p class="qr-note">Scan with your phone camera</p>
+      <ol class="steps">
+        <li>Choose your favourite frame.</li>
+        <li>Add your photos or take them with your camera.</li>
+        <li>Download it to keep, and share it with us if you wish.</li>
+      </ol>
+      <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden>Open the photobooth</a>
+    </section>
 
-  <section class="block" id="media">
-    <h3 class="sec-title">Our Gallery</h3>
-    <div class="gallery" id="gallery"></div>
-  </section>
+    <!-- Closing -->
+    <section class="closing block">
+      <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
+      <p class="sign">With love,<br><span class="names">Fira <span>&</span> Baqi</span></p>
+      <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
+    </section>
+  </main>
 
-  <section class="block alt" id="photobooth">
-    <h3 class="sec-title">Memory Booth</h3>
-    <p class="lede">Join us at the reception and take a photo in our wedding frames, a small keepsake of the day you shared with us.</p>
-    <!-- QR code: save as images/photobooth-qr.png (square) -->
-    <div class="qr">
-      <img src="images/photobooth-qr.png" alt="QR code to the Fira and Baqi wedding photobooth" onerror="this.remove()">
-      <span class="ph">QR code<small>images/photobooth-qr.png</small></span>
-    </div>
-    <p class="qr-note">Scan with your phone camera</p>
-    <ol class="steps">
-      <li>Choose your favourite frame.</li>
-      <li>Add your photos or take them with your camera.</li>
-      <li>Download it to keep, and share it with us if you wish. Shared photos go into our private guestbook album.</li>
-    </ol>
-    <a class="btn ghost" id="photoboothBtn" href="#" target="_blank" rel="noopener" hidden>Open the photobooth</a>
-  </section>
+  <!-- Audio -->
+  <audio id="bgm" loop>
+    <source src="audio/music.mp3" type="audio/mpeg">
+  </audio>
+  <button id="musicBtn" class="music-btn" aria-label="Play music">
+    <svg class="ic-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
 
-  <footer class="closing">
-    <i class="deco d-bl"></i><i class="deco d-br"></i>
-    <div class="orn"><svg aria-hidden="true"><use href="#leaf"/></svg></div>
-    <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
-    <p class="sign">With love,<span class="names">Fira &amp; Baqi</span></p>
-    <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
-  </footer>
-</main>
-
-<!-- Background music: save as audio/music.mp3 -->
-<audio id="bgm" src="audio/music.mp3" loop preload="none"></audio>
-<button class="music-btn" id="musicBtn" type="button" aria-label="Pause music">
-  <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-  <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-</button>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
