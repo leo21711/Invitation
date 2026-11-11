@@ -1,293 +1,398 @@
-/* =========================================================
-   1. CONFIGURATION
-   ========================================================= */
-// Replace with your actual Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
-
-/* =========================================================
-   2. URL PERSONALIZATION (Guest Name)
-   ========================================================= */
-function getGuestName() {
-  const params = new URLSearchParams(window.location.search);
-  let name = params.get('to');
+(function () {
+  const $ = id => document.getElementById(id);
+  
+  // 🔴 --- CONFIGURATION --- 🔴
+  const MAP_URL = 'https://maps.app.goo.gl/jzW97oWrjWaQR2Rt7?g_st=ic';
+  const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=Ibb_xZhso-halTkA';
+  const GALLERY_COUNT = 5;
+  const PHOTOBOOTH_URL = 'https://leo21711.github.io/Photobooth/';
+  
+  // 🔴 USE THIS SINGLE URL FOR BOTH RSVP AND GREETINGS 🔴
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOcjXfJuOY55LXSnjMYFDGtcatwg8orvsFGa2z45Zvm-_huXEkY5Tz3lsYI9y7T9KGg/exec';
+  
+  // ==========================================
+  // 1. Parse Guest Name from URL
+  // ==========================================
+  const params = new URLSearchParams(location.search);
+  let guestName = (params.get('to') || '').trim();
   
   // Fallback to clean path (e.g., /Rio%20Febri)
-  if (!name) {
+  if (!guestName) {
     const path = decodeURIComponent(window.location.pathname).replace(/^\/+|\/+$/g, '');
     if (path && path !== 'index.html') {
-      name = path;
+      guestName = path;
     }
   }
-  return name ? name.trim() : 'Valued Guest';
-}
+  
+  if (guestName) {
+    try { guestName = decodeURIComponent(guestName); } catch(e) {}
+  }
 
-const guestName = getGuestName();
-
-// Populate all guest name elements
-document.getElementById('guestNameCover').textContent = guestName;
-document.getElementById('guestNameLine').textContent = guestName;
-document.getElementById('guestNameBody').textContent = guestName;
-
-// Auto-fill forms
-const rsvpNameInput = document.getElementById('guestName');
-if (rsvpNameInput) rsvpNameInput.value = guestName;
-
-const greetingNameInput = document.getElementById('greetingName');
-if (greetingNameInput && guestName !== 'Valued Guest') {
-  greetingNameInput.value = guestName;
-}
-
-/* =========================================================
-   3. UI INTERACTIONS (Cover, Music, RSVP Pax)
-   ========================================================= */
-// Open Invitation
-const openBtn = document.getElementById('openBtn');
-const cover = document.getElementById('cover');
-const invitation = document.getElementById('invitation');
-const bgm = document.getElementById('bgm');
-const musicBtn = document.getElementById('musicBtn');
-
-if (openBtn) {
-  openBtn.addEventListener('click', () => {
-    cover.style.display = 'none';
-    invitation.hidden = false;
-    document.body.classList.remove('locked');
-    if (bgm) {
-      bgm.play().catch(() => console.log('Audio play failed'));
+  // ==========================================
+  // 2. Populate Guest Name & Lock Fields
+  // ==========================================
+  function setName(name) {
+    const shown = name || 'Valued Guest';
+    if ($('guestNameCover')) $('guestNameCover').textContent = shown;
+    if ($('guestNameLine')) $('guestNameLine').textContent = shown;
+    if ($('guestNameBody')) $('guestNameBody').textContent = shown;
+    
+    // RSVP Name
+    if ($('guestName')) {
+      $('guestName').value = shown;
+      $('guestName').readOnly = true;
     }
-  });
-}
-
-// Music Toggle
-if (musicBtn && bgm) {
-  musicBtn.addEventListener('click', () => {
-    if (bgm.paused) {
-      bgm.play();
-      musicBtn.classList.add('playing');
-    } else {
-      bgm.pause();
-      musicBtn.classList.remove('playing');
+    // Greetings Name
+    if ($('greetingName') && name) {
+      $('greetingName').value = name;
     }
-  });
-}
+  }
+  setName(guestName);
 
-// RSVP: Show/Hide Pax dropdown
-const statusRadios = document.querySelectorAll('input[name="status"]');
-const paxWrap = document.getElementById('paxWrap');
-
-statusRadios.forEach(radio => {
-  radio.addEventListener('change', () => {
-    if (radio.value === 'attending') {
-      paxWrap.hidden = false;
-    } else {
-      paxWrap.hidden = true;
-    }
-  });
-});
-
-/* =========================================================
-   4. RSVP FORM SUBMISSION
-   ========================================================= */
-const rsvpForm = document.getElementById('rsvpForm');
-const formError = document.getElementById('formError');
-const thanksDiv = document.getElementById('thanks');
-const thanksTitle = document.getElementById('thanksTitle');
-const thanksText = document.getElementById('thanksText');
-const editBtn = document.getElementById('editBtn');
-const submitBtn = document.getElementById('submitBtn');
-
-if (rsvpForm) {
-  rsvpForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    formError.hidden = true;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-
-    const name = document.getElementById('guestName').value.trim();
-    const status = document.querySelector('input[name="status"]:checked');
-    const pax = document.getElementById('pax').value;
-
-    if (!status) {
-      formError.textContent = 'Please select if you will attend.';
-      formError.hidden = false;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send reply';
-      return;
-    }
-
-    const payload = {
-      action: 'add_rsvp',
-      name: name,
-      status: status.value,
-      pax: status.value === 'attending' ? pax : '0'
-    };
-
+  // ==========================================
+  // 3. YouTube Video Embed
+  // ==========================================
+  function youtubeId(u) {
+    u = String(u || '').trim();
+    if (!u) return '';
+    if (u.length === 11 && u.indexOf('/') < 0 && u.indexOf('.') < 0) return u;
     try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors', // Required for Google Apps Script
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const x = new URL(u);
+      if (x.hostname.indexOf('youtu.be') > -1) return x.pathname.split('/')[1] || '';
+      const v = x.searchParams.get('v');
+      if (v) return v;
+      const p = x.pathname.split('/');
+      const i = Math.max(p.indexOf('embed'), p.indexOf('shorts'), p.indexOf('live'));
+      return i > -1 ? (p[i + 1] || '') : '';
+    } catch (e) { return ''; }
+  }
+  
+  const vid = youtubeId(YOUTUBE_URL);
+  if (vid && $('videoBox')) {
+    $('videoBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(vid)}?rel=0" title="Our story" allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>`;
+  }
 
-      // Show success message
-      rsvpForm.hidden = true;
-      thanksDiv.hidden = false;
-      
-      if (status.value === 'attending') {
-        thanksTitle.textContent = 'Joyfully Accepted!';
-        thanksText.textContent = `Thank you, ${name}. We can't wait to celebrate with you and your ${pax} guest(s).`;
-      } else {
-        thanksTitle.textContent = 'Thank You Anyway';
-        thanksText.textContent = `We understand, ${name}. We will miss you, but thank you for letting us know.`;
-      }
-    } catch (err) {
-      console.error('RSVP Error:', err);
-      formError.textContent = 'Failed to send. Please try again.';
-      formError.hidden = false;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send reply';
+  // ==========================================
+  // 4. Gallery Auto-loader
+  // ==========================================
+  const g = $('gallery');
+  if (g) {
+    for (let n = 1; n <= GALLERY_COUNT; n++) {
+      const f = document.createElement('figure');
+      f.className = 'tile';
+      const im = new Image();
+      im.alt = `Fira and Baqi, photo ${n}`;
+      im.src = `images/photo${n}.jpg`;
+      im.onerror = () => { im.src = `images/image${n}.jpg`; };
+      f.appendChild(im);
+      g.appendChild(f);
     }
-  });
+  }
 
-  // Allow editing the RSVP
-  if (editBtn) {
-    editBtn.addEventListener('click', () => {
-      thanksDiv.hidden = true;
-      rsvpForm.hidden = false;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send reply';
+  // ==========================================
+  // 5. Map & Photobooth Buttons
+  // ==========================================
+  const map = $('mapBtn');
+  if (MAP_URL && map) map.href = MAP_URL;
+  
+  if (PHOTOBOOTH_URL) { 
+    const pb = $('photoboothBtn'); 
+    if(pb) { pb.href = PHOTOBOOTH_URL; pb.hidden = false; } 
+  }
+
+  // ==========================================
+  // 6. RSVP Form Logic & Google Sheets Integration
+  // ==========================================
+  const form = $('rsvpForm'), err = $('formError'), btn = $('submitBtn');
+  
+  function showError(m) { 
+    if(err) { err.textContent = m; err.hidden = false; } 
+  }
+  
+  function showThanks(status, pax) {
+    form.hidden = true; 
+    const lede = $('rsvpLede');
+    if (lede) lede.hidden = true; 
+    $('thanks').hidden = false;
+    const n = guestName ? ', ' + guestName : '';
+    
+    if (status === 'attending') {
+      $('thanksTitle').textContent = 'Thank you' + n;
+      $('thanksText').textContent = `We have noted ${pax} ${pax > 1 ? 'guests' : 'guest'} for 13 December 2026. We look forward to celebrating with you, insha’Allah.`;
+    } else {
+      $('thanksTitle').textContent = 'Thank you for letting us know' + n;
+      $('thanksText').textContent = 'We are sorry you cannot join us, and we are grateful for your prayers and good wishes.';
+    }
+  }
+
+  function togglePax() {
+    const v = (form.querySelector('input[name=status]:checked') || {}).value;
+    $('paxWrap').hidden = v !== 'attending';
+  }
+  
+  if(form) {
+    form.addEventListener('change', togglePax);
+    const editBtn = $('editBtn');
+    if (editBtn) {
+      editBtn.addEventListener('click', () => { 
+        $('thanks').hidden = true; 
+        form.hidden = false; 
+        const lede = $('rsvpLede');
+        if (lede) lede.hidden = false; 
+      });
+    }
+    
+    form.addEventListener('submit', async e => {
+      e.preventDefault(); 
+      err.hidden = true;
+      
+      const checked = form.querySelector('input[name=status]:checked');
+      if (!checked) return showError('Please choose whether you will attend.');
+      
+      const status = checked.value;
+      const pax = status === 'attending' ? parseInt($('pax').value, 10) : 0;
+      const name = $('guestName').value;
+      
+      btn.disabled = true; 
+      btn.textContent = 'Sending…';
+      
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Required for GAS
+          body: JSON.stringify({ 
+            action: 'add_rsvp', // Tells the script this is an RSVP
+            name: name, 
+            status: status, 
+            pax: pax 
+          })
+        });
+        showThanks(status, pax);
+      } catch (ex) {
+        showError('Network error. Please check your connection and try again.');
+      } finally { 
+        btn.disabled = false; 
+        btn.textContent = 'Send reply'; 
+      }
     });
   }
-}
 
-/* =========================================================
-   5. GREETINGS / DOA & UCAPAN
-   ========================================================= */
-const greetingForm = document.getElementById('greetingForm');
-const greetingMessageInput = document.getElementById('greetingMessage');
-const greetingSubmitBtn = document.getElementById('greetingSubmitBtn');
-const greetingError = document.getElementById('greetingError');
-const greetingThanks = document.getElementById('greetingThanks');
-const greetingsList = document.getElementById('greetingsList');
-const greetingsLoading = document.getElementById('greetingsLoading');
+  // ==========================================
+  // 7. Envelope Opening & Music
+  // ==========================================
+  const openBtn = $('openBtn');
+  if (openBtn) {
+    openBtn.addEventListener('click', () => {
+      openBtn.disabled = true;
+      const envelope = $('envelope');
+      if (envelope) envelope.classList.add('open');
+      
+      const audio = $('bgm'), music = $('musicBtn');
+      if (audio && music) { 
+        music.classList.add('show'); 
+        audio.play().catch(() => {}); 
+      }
+      setTimeout(() => {
+        const cover = $('cover');
+        if (cover) cover.classList.add('gone');
+        const invitation = $('invitation');
+        if (invitation) invitation.hidden = false;
+        document.body.classList.remove('locked');
+        window.scrollTo(0, 0);
+      }, 1700);
+    });
+  }
+  
+  // ==========================================
+  // 8. Robust Background Music Logic
+  // ==========================================
+  const MUSIC_FILES = [
+    'audio/music.mp3', 'audio/music.m4a', 'audio/music.ogg',
+    'audio/music.wav', 'audio/backsound.mp3', 'audio/song.mp3'
+  ];
+  const audio = $('bgm');
+  const music = $('musicBtn');
+  let mi = 0;
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+  function setMusic(on) {
+    if (!music) return;
+    music.classList.toggle('off', !on);
+    music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+  }
 
-function timeAgo(dateString) {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now - date;
-  const mins = Math.floor(diffMs / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-  if (mins > 0) return `${mins} min ago`;
-  return 'Just now';
-}
-
-async function loadGreetings() {
-  try {
-    const response = await fetch(`${APPS_SCRIPT_URL}?action=list_greetings`);
-    const data = await response.json();
-    
-    if (greetingsLoading) greetingsLoading.style.display = 'none';
-
-    if (!data.greetings || data.greetings.length === 0) {
-      greetingsList.innerHTML = '<p class="lede" style="text-align: center; font-size: 0.9rem;">Be the first to leave a beautiful message! 💌</p>';
-      return;
+  function playMusic() {
+    if (!audio) return;
+    if (!audio.src || audio.src === window.location.href) {
+      audio.src = MUSIC_FILES[mi];
     }
-
-    greetingsList.innerHTML = data.greetings.map(g => `
-      <div class="greeting-item">
-        <div class="greeting-author">${escapeHtml(g.name)}</div>
-        <div class="greeting-time">${timeAgo(g.timestamp)}</div>
-        <div class="greeting-message">${escapeHtml(g.message)}</div>
-      </div>
-    `).join('');
-  } catch (error) {
-    console.error('Failed to load greetings:', error);
-    if (greetingsLoading) {
-      greetingsLoading.textContent = 'Unable to load messages.';
+    
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => setMusic(true)).catch(() => setMusic(false));
     }
   }
-}
 
-if (greetingForm) {
-  greetingForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  if (audio && music) {
+    audio.volume = 0.5;
     
-    const name = greetingNameInput.value.trim();
-    const message = greetingMessageInput.value.trim();
+    audio.addEventListener('error', () => {
+      mi++;
+      if (mi < MUSIC_FILES.length) {
+        audio.src = MUSIC_FILES[mi];
+        audio.load();
+        playMusic();
+      } else {
+        music.classList.remove('show');
+      }
+    });
+
+    audio.addEventListener('playing', () => setMusic(true));
+    audio.addEventListener('pause', () => setMusic(false));
     
-    if (!name || !message) {
-      greetingError.textContent = 'Please fill in both your name and message.';
-      greetingError.hidden = false;
-      return;
-    }
+    music.addEventListener('click', () => {
+      if (audio.paused) {
+        if (audio.error) {
+          mi = 0;
+          audio.src = MUSIC_FILES[0];
+          audio.load();
+        }
+        playMusic();
+      } else {
+        audio.pause();
+      }
+    });
 
-    greetingError.hidden = true;
-    greetingSubmitBtn.disabled = true;
-    greetingSubmitBtn.textContent = 'Sending...';
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && !audio.paused) audio.pause();
+    });
+  }
 
-    const payload = {
-      action: 'add_greeting',
-      name: name,
-      message: message
-    };
+  // ==========================================
+  // 9. GREETINGS / DOA & UCAPAN FUNCTIONALITY
+  // (Moved OUTSIDE the audio block to ensure it always runs)
+  // ==========================================
+  const greetingForm = $('greetingForm');
+  const greetingMessageInput = $('greetingMessage');
+  const greetingSubmitBtn = $('greetingSubmitBtn');
+  const greetingError = $('greetingError');
+  const greetingThanks = $('greetingThanks');
+  const greetingsList = $('greetingsList');
+  const greetingsLoading = $('greetingsLoading');
 
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const mins = Math.floor(diffMs / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (mins > 0) return `${mins} min ago`;
+    return 'Just now';
+  }
+
+  async function loadGreetings() {
     try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      // Optimistic UI update
-      if (greetingsList.querySelector('.lede')) {
-        greetingsList.innerHTML = '';
-      }
+      const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list_greetings`);
+      const data = await response.json();
       
-      const newGreetingHTML = `
-        <div class="greeting-item">
-          <div class="greeting-author">${escapeHtml(name)}</div>
-          <div class="greeting-time">Just now</div>
-          <div class="greeting-message">${escapeHtml(message)}</div>
-        </div>
-      `;
-      greetingsList.insertAdjacentHTML('afterbegin', newGreetingHTML);
+      if (greetingsLoading) greetingsLoading.style.display = 'none';
 
-      // Reset form
-      greetingForm.reset();
-      if (guestName !== 'Valued Guest') {
-        greetingNameInput.value = guestName;
+      if (!data.greetings || data.greetings.length === 0) {
+        greetingsList.innerHTML = '<p class="lede" style="text-align: center; font-size: 0.9rem;">Be the first to leave a beautiful message! 💌</p>';
+        return;
       }
-      greetingThanks.hidden = false;
-      greetingSubmitBtn.disabled = false;
-      greetingSubmitBtn.textContent = 'Send Wishes';
 
-      // Refresh from server after delay
-      setTimeout(loadGreetings, 2000);
-
+      greetingsList.innerHTML = data.greetings.map(g => `
+        <div class="greeting-item">
+          <div class="greeting-author">${escapeHtml(g.name)}</div>
+          <div class="greeting-time">${timeAgo(g.timestamp)}</div>
+          <div class="greeting-message">${escapeHtml(g.message)}</div>
+        </div>
+      `).join('');
     } catch (error) {
-      console.error('Greeting submit error:', error);
-      greetingError.textContent = 'Failed to send. Please try again.';
-      greetingError.hidden = false;
-      greetingSubmitBtn.disabled = false;
-      greetingSubmitBtn.textContent = 'Send Wishes';
+      console.error('Failed to load greetings:', error);
+      if (greetingsLoading) {
+        greetingsLoading.textContent = 'Unable to load messages.';
+      }
     }
-  });
-}
+  }
 
-// Load greetings on page load
-document.addEventListener('DOMContentLoaded', loadGreetings);
+  if (greetingForm) {
+    greetingForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = $('greetingName').value.trim();
+      const message = greetingMessageInput.value.trim();
+      
+      if (!name || !message) {
+        greetingError.textContent = 'Please fill in both your name and message.';
+        greetingError.hidden = false;
+        return;
+      }
 
+      greetingError.hidden = true;
+      greetingSubmitBtn.disabled = true;
+      greetingSubmitBtn.textContent = 'Sending...';
 
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Required for GAS
+          body: JSON.stringify({ 
+            action: 'add_greeting', // Tells the script this is a greeting
+            name: name, 
+            message: message 
+          })
+        });
 
+        // Optimistic UI update: show immediately
+        if (greetingsList.querySelector('.lede')) {
+          greetingsList.innerHTML = '';
+        }
+        
+        const newGreetingHTML = `
+          <div class="greeting-item">
+            <div class="greeting-author">${escapeHtml(name)}</div>
+            <div class="greeting-time">Just now</div>
+            <div class="greeting-message">${escapeHtml(message)}</div>
+          </div>
+        `;
+        greetingsList.insertAdjacentHTML('afterbegin', newGreetingHTML);
+
+        // Reset form
+        greetingForm.reset();
+        if (guestName && guestName !== 'Valued Guest') {
+          $('greetingName').value = guestName; // Restore auto-filled name
+        }
+        if (greetingThanks) greetingThanks.hidden = false;
+        greetingSubmitBtn.disabled = false;
+        greetingSubmitBtn.textContent = 'Send Wishes';
+
+        // Refresh from server after delay to ensure sync
+        setTimeout(loadGreetings, 2000);
+
+      } catch (error) {
+        console.error('Submit error:', error);
+        greetingError.textContent = 'Failed to send. Please check your connection and try again.';
+        greetingError.hidden = false;
+        greetingSubmitBtn.disabled = false;
+        greetingSubmitBtn.textContent = 'Send Wishes';
+      }
+    });
+  }
+
+  // Load greetings when the page opens
+  document.addEventListener('DOMContentLoaded', loadGreetings);
+
+})();
