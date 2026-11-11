@@ -287,3 +287,78 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   font-weight: 650;
   color: var(--brown);
 }
+
+
+/* --- Greetings Section Additions --- */
+#greetingMessage {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border, #d4c5b0);
+  border-radius: 4px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  background: var(--bg, #fdf8f0);
+  color: var(--text, #3a2e26);
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#greetingMessage:focus {
+  outline: none;
+  border-color: var(--primary, #8b6f47);
+  box-shadow: 0 0 0 2px rgba(139, 111, 71, 0.1);
+}
+
+.greetings-list {
+  margin-top: 2rem;
+  max-height: 400px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border, #e8dfd3);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.greetings-list::-webkit-scrollbar {
+  width: 6px;
+}
+.greetings-list::-webkit-scrollbar-thumb {
+  background: var(--accent, #c9a87c);
+  border-radius: 3px;
+}
+
+.greeting-item {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border, #f0e6d8);
+}
+.greeting-item:last-child {
+  border-bottom: none;
+}
+
+.greeting-author {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--primary-dark, #6b5436);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.greeting-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--text-light, #7a6b5d);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.greeting-message {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: var(--text, #3a2e26);
+  line-height: 1.6;
+  white-space: pre-wrap; /* Preserves line breaks from textarea */
+}
+
+
+
