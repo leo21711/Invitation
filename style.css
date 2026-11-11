@@ -1,4 +1,4 @@
-/* Fira & Baqi invitation · watercolour cream, sage and terracotta (florals live in deco.css) */
+/* Fira & Baqi invitation · watercolour cream, sage and terracotta */
 :root{
   --bg:#F7EBDC;--paper:#FBF0E3;--white:#fff;
   --olive:#66714F;--sage:#98A48D;--sage-dark:#7D8972;
@@ -21,7 +21,7 @@ button{-webkit-tap-highlight-color:transparent}
 h1,h2,h3,h4,p,dl,dd,ol{margin:0}
 svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
-/* florals (images in deco.css) */
+/* florals */
 .deco{position:absolute;display:block;pointer-events:none;background-repeat:no-repeat;background-size:100% 100%;z-index:0}
 .deco.d-tl{top:0;left:0;width:min(34%,215px)}
 .deco.d-tr{top:0;right:0;width:min(36%,230px)}
@@ -53,7 +53,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 #submitBtn:hover{background:var(--terracotta-dark)}
 .link{background:none;border:0;padding:6px;color:var(--terracotta-dark);font-size:18px;font-style:italic;text-decoration:underline;cursor:pointer}
 
-/* PAGE 1 · cover: photo under a light cream wash (photo is images/cover.jpg) */
+/* PAGE 1 · cover */
 #cover{position:fixed;inset:0;z-index:50;overflow-y:auto;overflow-x:hidden;color:var(--olive);transition:opacity .9s ease,visibility .9s ease;
   background:linear-gradient(180deg,rgba(251,240,227,.9) 0%,rgba(251,240,227,.5) 34%,rgba(251,240,227,.58) 62%,rgba(251,240,227,.95) 100%),url("images/cover.jpg") center/cover no-repeat,#FBF0E3}
 #cover.hide,#cover.hidden,#cover.gone,#cover.out,#cover.opened,#cover.is-open{opacity:0;visibility:hidden;pointer-events:none}
@@ -69,7 +69,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .open-btn .sep{width:1px;height:28px;background:rgba(255,255,255,.55)}
 .open-btn svg.i{stroke-width:1.6}
 
-/* envelope: ivory body, sage flap with leaves, gold folds, wax seal */
+/* envelope */
 .envelope{position:relative;width:min(340px,86vw);aspect-ratio:1.55;margin:84px auto 20px;perspective:900px}
 .envelope>*{position:absolute}
 .env-back{inset:0;border-radius:6px;background:linear-gradient(180deg,#6B7358,#7D8972);box-shadow:0 18px 30px rgba(91,74,55,.3)}
@@ -112,14 +112,17 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .verse cite{display:block;margin-top:6px;font-size:17px;font-style:normal;color:var(--brown-soft)}
 
 /* events + venue */
-.events{display:grid;grid-template-columns:1fr 1px 1fr;gap:0 14px;max-width:520px;margin:0 auto 26px}
+.events{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:400px;margin:0 auto 26px}
 .event svg.i{color:var(--olive);margin-bottom:6px}
 .label{margin-bottom:6px;font-size:15px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--olive)}
 .event p:not(.label),.venue p:not(.label){font-size:clamp(16px,4.5vw,19px);line-height:1.5}
-.vline{background:linear-gradient(180deg,transparent,var(--terracotta),transparent);opacity:.6}
+.vline{width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--terracotta),transparent);opacity:0.6}
 .venue .name{font-size:22px;font-weight:600}
 .venue .addr{font-size:16px!important;font-style:italic;color:var(--brown-soft)}
 .venue .btn{margin-top:14px}
+.event.highlight{background:rgba(255,255,255,0.75);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;box-shadow:0 4px 16px rgba(217,185,140,0.25);width:100%}
+.event.highlight .label{color:var(--terracotta-dark);font-weight:750;letter-spacing:5px}
+.event.highlight p:not(.label){font-weight:650;color:var(--brown)}
 
 /* story + video */
 .story-card{max-width:520px;margin:0 auto;padding:26px 22px 28px;background:rgba(255,255,255,.3);border:1px solid var(--gold-light);border-radius:14px;outline:1px solid var(--gold-light);outline-offset:-8px}
@@ -131,7 +134,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .hero .deco.d-tl{width:min(30%,190px)}.hero .deco.d-tr{width:min(30%,190px)}
 #cover .deco.d-tl,#cover .deco.d-tr{width:min(29%,190px)}
 
-/* gallery: polaroids */
+/* gallery */
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;max-width:520px;margin:0 auto;padding:6px 6px 0}
 .tile{position:relative;margin:0;aspect-ratio:1;overflow:hidden;background:linear-gradient(160deg,#EADCCB,#D5DBC8);border:7px solid #fff;border-bottom-width:24px;border-radius:2px;box-shadow:0 6px 16px rgba(91,74,55,.2);transform:rotate(-2.5deg)}
 .tile:first-child{grid-column:span 2;aspect-ratio:4/3;transform:rotate(1.2deg)}
@@ -143,7 +146,8 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 #rsvpForm{max-width:360px;margin:0 auto;text-align:left}
 #rsvpForm label{display:block;margin-bottom:6px;font-size:17px;font-weight:600}
 #rsvpForm input[type=text],#rsvpForm select{width:100%;min-height:50px;margin-bottom:18px;padding:8px 14px;background:var(--white);color:var(--brown);border:1px solid var(--gold-light);border-radius:12px}
-#rsvpForm input[readonly]{background:rgba(255,255,255,.55)}
+#rsvpForm input[readonly]{background:rgba(255,255,255,.55);color:var(--olive);font-style:italic;font-weight:600;cursor:default;border-color:var(--gold-light);box-shadow:none}
+#rsvpForm input[readonly]:focus{outline:none;border-color:var(--gold-light)}
 fieldset{margin:0 0 18px;padding:0;border:0}
 legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 .choice{position:relative;display:block;margin-bottom:8px!important}
@@ -172,13 +176,227 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 .sign .names{display:block;margin:0;font-size:42px}
 .wassalam{margin-top:12px;font-size:15px;letter-spacing:1px;color:var(--brown-soft)}
 
-/* music button: play / pause */
+/* music button */
 .music-btn{position:fixed;right:16px;bottom:16px;z-index:60;width:50px;height:50px;display:none;align-items:center;justify-content:center;background:var(--paper);color:var(--olive);border:1px solid var(--gold);border-radius:50%;box-shadow:0 4px 14px var(--shadow);cursor:pointer}
 .music-btn.show{display:flex}
 .music-btn svg{width:22px;height:22px;fill:currentColor}
 .music-btn .ic-play{display:none;margin-left:2px}
 .music-btn.off .ic-play{display:block}
 .music-btn.off .ic-pause{display:none}
+
+/* map embed */
+.map-embed{max-width:520px;margin:0 auto 24px;border-radius:16px;overflow:hidden;border:1px solid var(--gold-light);box-shadow:0 8px 20px var(--shadow)}
+.map-embed iframe{display:block;width:100%;height:300px}
+
+/* ==========================================
+   GREETINGS SECTION STYLING (Doa & Ucapan)
+   ========================================== */
+
+/* Input Form Box */
+#greetingForm {
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--paper) 0%, var(--bg) 100%);
+  border: 1px solid var(--gold-light);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px var(--shadow);
+}
+
+#greetingForm label {
+  display: block;
+  font-family: var(--title);
+  font-size: 1.1rem;
+  color: var(--brown);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+#greetingForm input[type="text"],
+#greetingForm textarea {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  background: var(--white);
+  border: 1px solid var(--gold-light);
+  border-radius: 10px;
+  color: var(--brown);
+  margin-bottom: 1.2rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+#greetingForm input[type="text"]:focus,
+#greetingForm textarea:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(196, 105, 74, 0.15);
+}
+
+#greetingForm textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+#greetingSubmitBtn {
+  width: 100%;
+  padding: 0.9rem 2rem;
+  font-family: var(--title);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: var(--terracotta);
+  color: var(--white);
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(196, 105, 74, 0.3);
+}
+
+#greetingSubmitBtn:hover:not(:disabled) {
+  background: var(--terracotta-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(196, 105, 74, 0.4);
+}
+
+#greetingSubmitBtn:disabled {
+  opacity: 0.65;
+  cursor: default;
+  transform: none;
+}
+
+#greetingError {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: var(--serif);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: rgba(169, 81, 55, 0.1);
+  color: var(--terracotta-dark);
+  border: 1px solid rgba(169, 81, 55, 0.2);
+}
+
+#greetingThanks {
+  padding: 1.5rem;
+  background: rgba(152, 164, 141, 0.15);
+  border: 1px solid var(--sage);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+#greetingThanks h4 {
+  font-family: var(--title);
+  color: var(--olive);
+  font-size: 1.3rem;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Posted Greetings Cards */
+.greetings-list {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.greeting-item {
+  background: linear-gradient(135deg, var(--white) 0%, #FFFCF6 100%);
+  border: 1px solid var(--gold-light);
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.greeting-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--terracotta) 0%, var(--gold) 100%);
+  opacity: 0.7;
+}
+
+.greeting-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(91, 74, 55, 0.18);
+}
+
+.greeting-author {
+  font-family: var(--title);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--olive);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.3px;
+}
+
+.greeting-time {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  color: var(--brown-soft);
+  font-style: italic;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.greeting-time::before {
+  content: '🕊️';
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.greeting-message {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--brown);
+  white-space: pre-wrap;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--gold-light);
+  margin-left: 0.25rem;
+}
+
+#greetingsLoading,
+.greetings-list .lede {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  color: var(--brown-soft);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  background: var(--paper);
+  border: 2px dashed var(--gold-light);
+  border-radius: 14px;
+  margin: 1rem 0;
+}
+
+.greetings-list::-webkit-scrollbar { width: 6px; }
+.greetings-list::-webkit-scrollbar-track { background: var(--bg); border-radius: 3px; }
+.greetings-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+.greetings-list::-webkit-scrollbar-thumb:hover { background: var(--terracotta); }
+
+@keyframes slideInGreeting {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.greeting-item.new-message {
+  animation: slideInGreeting 0.5s ease-out;
+}
 
 @media (max-height:720px){
   .cover-inner{padding:30px 20px 20px;gap:8px}
@@ -193,172 +411,3 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   .hero,.block{padding-left:16px;padding-right:16px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-
-
-/* --- ADD THIS TO YOUR EXISTING style.css --- */
-
-/* Elegant styling for the locked RSVP name field */
-#rsvpForm input[readonly] {
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--olive);
-  font-style: italic;
-  font-weight: 600;
-  cursor: default;
-  border-color: var(--gold-light);
-  box-shadow: none;
-}
-
-#rsvpForm input[readonly]:focus {
-  outline: none;
-  border-color: var(--gold-light);
-}
-
-
-/* --- ADD THIS TO THE BOTTOM OF style.css --- */
-
-/* Highlight styling for Resepsi */
-.event.highlight {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid var(--gold);
-  border-radius: 16px;
-  padding: 18px 12px;
-  box-shadow: 0 4px 16px rgba(217, 185, 140, 0.25);
-}
-.event.highlight .label {
-  color: var(--terracotta-dark);
-  font-weight: 700;
-  letter-spacing: 5px;
-}
-.event.highlight p:not(.label) {
-  font-weight: 600;
-  color: var(--brown);
-}
-
-/* Embedded Map Styling */
-.map-embed {
-  max-width: 520px;
-  margin: 0 auto 24px;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--gold-light);
-  box-shadow: 0 8px 20px var(--shadow);
-}
-.map-embed iframe {
-  display: block;
-  width: 100%;
-  height: 300px;
-}
-
-/* --- ADD THIS TO THE BOTTOM OF style.css --- */
-
-/* 1. Change Events from side-by-side to top-and-bottom */
-.events {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  max-width: 400px;
-  margin: 0 auto 26px;
-}
-
-/* 2. Change the vertical line into a horizontal divider */
-.vline {
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--terracotta), transparent);
-  opacity: 0.6;
-}
-
-/* 3. Add the elegant highlight frame for Resepsi */
-.event.highlight {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid var(--gold);
-  border-radius: 16px;
-  padding: 20px 16px;
-  box-shadow: 0 4px 16px rgba(217, 185, 140, 0.25);
-  width: 100%;
-}
-.event.highlight .label {
-  color: var(--terracotta-dark);
-  font-weight: 750;
-  letter-spacing: 5px;
-}
-.event.highlight p:not(.label) {
-  font-weight: 650;
-  color: var(--brown);
-}
-
-
-/* --- Greetings Section Additions --- */
-#greetingMessage {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border, #d4c5b0);
-  border-radius: 4px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem;
-  background: var(--bg, #fdf8f0);
-  color: var(--text, #3a2e26);
-  resize: vertical;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#greetingMessage:focus {
-  outline: none;
-  border-color: var(--primary, #8b6f47);
-  box-shadow: 0 0 0 2px rgba(139, 111, 71, 0.1);
-}
-
-.greetings-list {
-  margin-top: 2rem;
-  max-height: 400px;
-  overflow-y: auto;
-  border-top: 1px solid var(--border, #e8dfd3);
-  padding-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.greetings-list::-webkit-scrollbar {
-  width: 6px;
-}
-.greetings-list::-webkit-scrollbar-thumb {
-  background: var(--accent, #c9a87c);
-  border-radius: 3px;
-}
-
-.greeting-item {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border, #f0e6d8);
-}
-.greeting-item:last-child {
-  border-bottom: none;
-}
-
-.greeting-author {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  color: var(--primary-dark, #6b5436);
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.greeting-time {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.85rem;
-  color: var(--text-light, #7a6b5d);
-  font-style: italic;
-  margin-bottom: 0.5rem;
-}
-
-.greeting-message {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem;
-  color: var(--text, #3a2e26);
-  line-height: 1.6;
-  white-space: pre-wrap; /* Preserves line breaks from textarea */
-}
-
-
-
