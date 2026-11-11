@@ -1,622 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Wedding Invitation — Naja & Izzuddin</title>
-<style>
-  :root {
-    --primary: #8B6F47;
-    --primary-dark: #6B5436;
-    --accent: #C9A87C;
-    --bg: #FDF8F0;
-    --card: #FFFFFF;
-    --text: #3A2E26;
-    --text-light: #7A6B5D;
-    --border: #E8DFD3;
-    --shadow: 0 4px 20px rgba(139, 111, 71, 0.08);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.7;
-    min-height: 100vh;
-  }
-
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  /* ===== HERO ===== */
-  .hero {
-    text-align: center;
-    padding: 60px 20px 40px;
-    background: linear-gradient(135deg, #FDF8F0 0%, #F5EBDC 100%);
-    border-radius: 20px;
-    margin-bottom: 30px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '✦';
-    position: absolute;
-    top: 20px; left: 20px;
-    color: var(--accent);
-    font-size: 24px;
-    opacity: 0.5;
-  }
-
-  .hero::after {
-    content: '✦';
-    position: absolute;
-    bottom: 20px; right: 20px;
-    color: var(--accent);
-    font-size: 24px;
-    opacity: 0.5;
-  }
-
-  .hero h1 {
-    font-size: 2.2rem;
-    color: var(--primary);
-    margin-bottom: 10px;
-    font-weight: 400;
-    letter-spacing: 2px;
-  }
-
-  .hero .subtitle {
-    font-style: italic;
-    color: var(--text-light);
-    font-size: 1.1rem;
-  }
-
-  .guest-badge {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 8px 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 0.95rem;
-    color: var(--primary-dark);
-  }
-
-  /* ===== SECTIONS ===== */
-  section {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 40px 30px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-  }
-
-  .section-title {
-    text-align: center;
-    font-size: 1.6rem;
-    color: var(--primary);
-    margin-bottom: 8px;
-    font-weight: 400;
-    letter-spacing: 1px;
-  }
-
-  .section-divider {
-    text-align: center;
-    color: var(--accent);
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    letter-spacing: 8px;
-  }
-
-  /* ===== COUPLE SECTION ===== */
-  .couple-intro {
-    text-align: center;
-    font-style: italic;
-    color: var(--text-light);
-    margin-bottom: 35px;
-    font-size: 1.05rem;
-    line-height: 1.8;
-  }
-
-  .couple-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .person-card {
-    text-align: center;
-    padding: 25px 20px;
-    background: linear-gradient(135deg, #FDF8F0 0%, #FAF3E8 100%);
-    border-radius: 14px;
-    border: 1px solid var(--border);
-  }
-
-  .person-name {
-    font-size: 1.4rem;
-    color: var(--primary);
-    margin-bottom: 12px;
-    font-weight: 500;
-  }
-
-  .person-parent {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    line-height: 1.7;
-  }
-
-  .person-parent strong {
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .couple-and {
-    text-align: center;
-    font-size: 2rem;
-    color: var(--accent);
-    font-weight: 300;
-    margin: 10px 0;
-  }
-
-  /* ===== SAVE THE DATE ===== */
-  .event-details {
-    text-align: center;
-  }
-
-  .event-date {
-    font-size: 1.3rem;
-    color: var(--primary);
-    margin: 20px 0 10px;
-    font-weight: 500;
-  }
-
-  .event-location {
-    color: var(--text-light);
-    font-size: 1rem;
-  }
-
-  /* ===== PHOTOBOOTH ===== */
-  .photobooth-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .photo-frame {
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, #F5EBDC 0%, #E8DFD3 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    border: 2px dashed var(--accent);
-  }
-
-  /* ===== GREETINGS SECTION ===== */
-  .greetings-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 25px;
-  }
-
-  .greetings-header .envelope-icon {
-    font-size: 2rem;
-  }
-
-  .greetings-header h2 {
-    font-size: 1.3rem;
-    color: var(--primary);
-    font-weight: 400;
-    font-style: italic;
-  }
-
-  .greeting-form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-bottom: 30px;
-  }
-
-  .greeting-form input,
-  .greeting-form textarea {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 1rem;
-    background: var(--bg);
-    color: var(--text);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .greeting-form input:focus,
-  .greeting-form textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.15);
-  }
-
-  .greeting-form textarea {
-    min-height: 120px;
-    resize: vertical;
-  }
-
-  .greeting-form button {
-    align-self: flex-end;
-    padding: 12px 32px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-  }
-
-  .greeting-form button:hover {
-    background: var(--primary-dark);
-  }
-
-  .greeting-form button:active {
-    transform: scale(0.97);
-  }
-
-  .greeting-form button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .greetings-list {
-    border-top: 1px solid var(--border);
-    padding-top: 25px;
-    max-height: 400px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .greetings-list::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .greetings-list::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 3px;
-  }
-
-  .greeting-item {
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .greeting-item:last-child {
-    border-bottom: none;
-  }
-
-  .greeting-author {
-    font-size: 1.1rem;
-    color: var(--primary-dark);
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-
-  .greeting-time {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-
-  .greeting-message {
-    color: var(--text);
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  .greeting-empty {
-    text-align: center;
-    color: var(--text-light);
-    font-style: italic;
-    padding: 20px;
-  }
-
-  .status-msg {
-    text-align: center;
-    font-size: 0.9rem;
-    min-height: 20px;
-    margin-top: 8px;
-  }
-
-  .status-msg.success { color: #5a8a5a; }
-  .status-msg.error { color: #a85a5a; }
-
-  /* ===== FOOTER ===== */
-  footer {
-    text-align: center;
-    padding: 30px 20px;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    font-style: italic;
-  }
-
-  @media (max-width: 480px) {
-    .hero h1 { font-size: 1.8rem; }
-    section { padding: 30px 20px; }
-    .person-name { font-size: 1.2rem; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fira & Baqi · 13 December 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="deco.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="locked">
 
-<div class="container">
+  <!-- COVER PAGE -->
+  <div id="cover">
+    <div class="deco d-tl"></div>
+    <div class="deco d-tr"></div>
+    <div class="deco d-bl"></div>
+    <div class="deco d-br"></div>
+    
+    <div class="cover-inner">
+      <div class="cover-head">
+        <p class="eyebrow">The  Wedding Reception & Celebration</p>
+        <h1 class="names">Fira <span>&</span> Baqi</h1>
+        <p class="cdate">Sunday, 13 December 2026</p>
+      </div>
+      
+      <div class="envelope" id="envelope">
+        <div class="env-back"></div>
+        <div class="env-card">
+          <p class="small">The Wedding Reception & Celebration</p>
+          <h2 class="names" style="font-size: clamp(32px, 10vw, 48px);">Fira <span>&</span> Baqi</h2>
+          <p class="card-guest" id="guestNameLine">Valued Guest</p>
+        </div>
+        <div class="env-front">
+          <div class="deco e-bl d-bl"></div>
+          <div class="deco e-tr d-tr"></div>
+        </div>
+        <div class="env-flap">
+          <svg class="f1" viewBox="0 0 100 100"><path d="M0,0 L100,100 M100,0 L0,100" stroke="currentColor" stroke-width="2"/></svg>
+          <svg class="f2" viewBox="0 0 100 100"><path d="M0,0 L100,100 M100,0 L0,100" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <div class="env-seal">
+          <span>F&B</span>
+          <svg viewBox="0 0 24 24"><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8Z" fill="currentColor"/></svg>
+        </div>
+      </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <h1>Naja & Izzuddin</h1>
-    <p class="subtitle">We're getting married!</p>
-    <div class="guest-badge" id="guestBadge">Dear Guest</div>
+      <div class="cover-foot">
+        <p class="to-line">Dear <strong id="guestNameCover">Valued Guest</strong></p>
+        <button id="openBtn" class="btn open-btn">
+          Open Invitation 
+          <span class="sep"></span> 
+          <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- COUPLE SECTION (NEW) -->
-  <section id="couple">
-    <h2 class="section-title">The Happy Couple</h2>
-    <div class="section-divider">— ✦ —</div>
+  <!-- MAIN INVITATION -->
+  <main id="invitation" hidden>
+    <div class="deco d-tl"></div>
+    <div class="deco d-tr"></div>
+    <div class="deco d-bl"></div>
+    <div class="deco d-br"></div>
 
-    <p class="couple-intro">
-      With love, gratitude, and humble hearts, we invite you to share in the joy of our wedding celebration.
-    </p>
+    <!-- Hero -->
+    <section class="hero block">
+      <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="eyebrow">The Wedding Reception & Celebration</p>
+      <h1 class="names">Fira <span>&</span> Baqi</h1>
+      <p class="date-line">Sunday, 13 December 2026</p>
+      <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      <p class="lede">You are invited, <strong id="guestNameBody">Valued Guest</strong></p>
+    </section>
 
-    <div class="couple-wrapper">
-      <div class="person-card">
-        <div class="person-name">Naja Safira Al Faiqah, S.T., M.T.</div>
-        <div class="person-parent">
-          Daughter of<br>
-          <strong>Bambang Handoko Susilo, S.T., M.Kes.</strong><br>
-          &amp; <strong>Dewi Peny Herdianawati, S.E.</strong>
+    <!-- Portrait & Verse -->
+    <section class="block alt">
+      <div class="portrait-wrap">
+        <div class="portrait">
+          <img src="images/portrait.jpg" alt="Fira and Baqi">
+        </div>
+        <div class="deco pf d-br"></div>
+      </div>
+      <blockquote class="verse">
+        “And We created you in pairs”
+        <cite>Q.S. An-Naba : 8</cite>
+      </blockquote>
+    </section>
+
+     <!-- Events -->
+    <section class="block">
+      <h2 class="sec-title">Save the Date</h2>
+      <div class="events">
+        <!-- Akad Nikah with Islamic Star Icon -->
+        <div class="event">
+          <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+            <rect x="6" y="6" width="12" height="12"/>
+            <rect x="6" y="6" width="12" height="12" transform="rotate(45 12 12)"/>
+          </svg>
+          <p class="label">Akad Nikah</p>
+          <p>13 September 2026</p>
+        </div>
+        
+        <div class="vline"></div>
+        
+        <!-- Resepsi with Highlight Class -->
+        <div class="event highlight">
+          <svg class="i" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+          <p class="label">Reception</p>
+          <p>13 December 2026<br>10.00 – 13.00 WIB</p>
         </div>
       </div>
+    </section>
 
-      <div class="couple-and">&amp;</div>
+    <!-- Venue -->
+    <section class="block alt venue">
+      <h2 class="sec-title">The Venue</h2>
+      <p class="name">Astoria Convention Hall, Mojokerto</p>
+      <p class="addr">Jl. Gajah Mada No.61, Mojokerto</p>
+      
+      <!-- Embedded Map Preview -->
+      <div class="map-embed">
+        <!-- 🔴 INSTRUCTION: Replace the src="..." URL below with your actual Google Maps Embed URL (see guide below) -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.5!2d112.4!3d-7.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjQnMDAuMCJTIDExMsKwMjQnMDAuMCJF!5e0!3m2!1sen!2sid!4v1600000000000!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
 
-      <div class="person-card">
-        <div class="person-name">Izzuddin Baqi, S.T.</div>
-        <div class="person-parent">
-          Son of the late<br>
-          <strong>Drs. Noor Hadi, M.Ag., M.Pd.</strong><br>
-          &amp; <strong>Dr. dr. Siti Soekiswati, S.H., M.H., C.Med.</strong>
+      <a href="#" id="mapBtn" class="btn ghost" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Open in Google Maps
+      </a>
+    </section>
+
+    <!-- Story & Video -->
+    <section class="block">
+      <h2 class="sec-title">Our Story</h2>
+      <div class="story-card">
+        <p class="text">Two hearts, one journey, towards a life together in His pleasure.</p>
+        <div class="video-box" id="videoBox">
+          <!-- YouTube iframe injected by JS -->
+          <div class="ph">Our memories on video<small>add your YouTube link in script.js</small></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SAVE THE DATE -->
-  <section id="save-the-date">
-    <h2 class="section-title">Save The Date</h2>
-    <div class="section-divider">— ✦ —</div>
-    <div class="event-details">
-      <div class="event-date">Saturday, 15 November 2026</div>
-      <div class="event-location">Jakarta, Indonesia</div>
-    </div>
-  </section>
+    <!-- RSVP -->
+    <section class="block alt" id="rsvpSection">
+      <h2 class="sec-title">RSVP</h2>
+      <p class="lede" id="rsvpLede">Kindly confirm your attendance before 1 December 2026.</p>
+      
+      <form id="rsvpForm">
+        <label for="guestName">Your name</label>
+        <input type="text" id="guestName" name="guestName" readonly>
+        
+        <fieldset>
+          <legend>Will you attend?</legend>
+          <label class="choice">
+            <input type="radio" name="status" value="attending" id="statusAttending">
+            <span>Joyfully attending</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="status" value="declined" id="statusDeclined">
+            <span>Regretfully unable</span>
+          </label>
+        </fieldset>
 
-  <!-- PHOTOBOOTH -->
-  <section id="photobooth">
-    <h2 class="section-title">Our Moments</h2>
-    <div class="section-divider">— ✦ —</div>
-    <div class="photobooth-grid">
-      <div class="photo-frame">Photo 1</div>
-      <div class="photo-frame">Photo 2</div>
-      <div class="photo-frame">Photo 3</div>
-      <div class="photo-frame">Photo 4</div>
-    </div>
-  </section>
+        <div id="paxWrap" hidden>
+          <label for="pax">Number of guests (maximum 3)</label>
+          <select id="pax" name="pax">
+            <option value="1">1 guest</option>
+            <option value="2">2 guests</option>
+            <option value="3">3 guests</option>
+          </select>
+        </div>
 
-  <!-- GREETINGS SECTION (NEW) -->
-  <section id="greetings">
-    <div class="greetings-header">
-      <span class="envelope-icon">💌</span>
-      <h2>Tinggalkan pesan/doa untuk kami</h2>
-    </div>
+        <p class="msg error" id="formError" hidden></p>
+        <button type="submit" id="submitBtn" class="btn">Send reply</button>
+      </form>
 
-    <form class="greeting-form" id="greetingForm">
-      <input
-        type="text"
-        id="greetingName"
-        placeholder="Your name"
-        required
-        maxlength="100"
-      />
-      <textarea
-        id="greetingMessage"
-        placeholder="Tulis pesan"
-        required
-        maxlength="1000"
-      ></textarea>
-      <button type="submit" id="sendBtn">Kirim</button>
-      <div class="status-msg" id="statusMsg"></div>
-    </form>
+      <div id="thanks" class="thanks" hidden>
+        <h4 id="thanksTitle">Thank you</h4>
+        <p id="thanksText"></p>
+        <button type="button" id="editBtn" class="link">Change my reply</button>
+      </div>
+    </section>
 
-    <div class="greetings-list" id="greetingsList">
-      <div class="greeting-empty">Loading messages...</div>
-    </div>
-  </section>
+    <!-- Gallery -->
+    <section class="block">
+      <h2 class="sec-title">Our Gallery</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
 
-  <footer>
-    With love, Naja &amp; Izzuddin 💕
-  </footer>
+    <!-- Photobooth -->
+    <section class="block alt">
+      <h2 class="sec-title">Memory Booth</h2>
+      <p class="lede">Join us at the reception and take a photo in our wedding frames, a small keepsake of the day you shared with us.</p>
+      <div class="qr">
+        <img src="images/photobooth-qr.png" alt="Photobooth QR Code">
+      </div>
+      <p class="qr-note">Scan with your phone camera</p>
+      <ol class="steps">
+        <li>Choose your favourite frame.</li>
+        <li>Add your photos or take them with your camera.</li>
+        <li>Download it to keep, and share it with us if you wish.</li>
+      </ol>
+      <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden>Open the photobooth</a>
+    </section>
 
-</div>
+    <!-- Closing -->
+    <section class="closing block">
+      <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
+      <p class="sign">With love,<br><span class="names">Fira <span>&</span> Baqi</span></p>
+      <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
+      <p ></p>
+      <p class="wassalam">music by Dengarkan Dia - Bersenyawa</p>
+    </section>
+  </main>
 
-<script>
-/* =========================================================
-   1. URL PERSONALIZATION — guest name from query or path
-   ========================================================= */
-function getGuestName() {
-  // Try ?to=... first
-  const params = new URLSearchParams(window.location.search);
-  let name = params.get('to');
 
-  // Fallback: clean path like /Rio%20Febri
-  if (!name) {
-    const path = decodeURIComponent(window.location.pathname)
-      .replace(/^\/+|\/+$/g, '');
-    if (path && path !== 'index.html') {
-      name = path;
-    }
-  }
-  return name ? name.trim() : null;
-}
+  <!-- Audio -->
+  <audio id="bgm" loop preload="auto">
+    <source src="audio/music.mp3" type="audio/mpeg">
+    
+  </audio>
+  <button id="musicBtn" class="music-btn" aria-label="Play music">
+    <svg class="ic-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
 
-const guestName = getGuestName();
-if (guestName) {
-  document.getElementById('guestBadge').textContent = `Dear ${guestName}`;
-  document.getElementById('greetingName').value = guestName;
-}
-
-/* =========================================================
-   2. GOOGLE APPS SCRIPT CONFIG
-   Replace with your deployed Web App URL
-   ========================================================= */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
-
-/* =========================================================
-   3. GREETINGS — submit & load
-   ========================================================= */
-const form = document.getElementById('greetingForm');
-const nameInput = document.getElementById('greetingName');
-const msgInput = document.getElementById('greetingMessage');
-const sendBtn = document.getElementById('sendBtn');
-const statusMsg = document.getElementById('statusMsg');
-const listEl = document.getElementById('greetingsList');
-
-// Relative time formatter
-function timeAgo(dateStr) {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now - date;
-  const mins = Math.floor(diffMs / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) {
-    const weeks = Math.floor(days / 7);
-    if (weeks > 0) {
-      return `${weeks} week${weeks>1?'s':''}, ${days%7} day${days%7!==1?'s':''} ago`;
-    }
-    return `${days} day${days!==1?'s':''} ago`;
-  }
-  if (hours > 0) {
-    const remMins = mins % 60;
-    return `${hours} hour${hours>1?'s':''}, ${remMins} min${remMins!==1?'s':''} ago`;
-  }
-  return `${mins} min${mins!==1?'s':''} ago`;
-}
-
-function renderGreetings(items) {
-  if (!items || items.length === 0) {
-    listEl.innerHTML = '<div class="greeting-empty">Be the first to leave a message! 💌</div>';
-    return;
-  }
-  listEl.innerHTML = items.map(g => `
-    <div class="greeting-item">
-      <div class="greeting-author">${escapeHtml(g.name)}</div>
-      <div class="greeting-time">${timeAgo(g.timestamp)}</div>
-      <div class="greeting-message">${escapeHtml(g.message)}</div>
-    </div>
-  `).join('');
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-async function loadGreetings() {
-  try {
-    const res = await fetch(APPS_SCRIPT_URL + '?action=list');
-    const data = await res.json();
-    renderGreetings(data.greetings || []);
-  } catch (err) {
-    console.error('Failed to load greetings:', err);
-    listEl.innerHTML = '<div class="greeting-empty">Unable to load messages. Please try again later.</div>';
-  }
-}
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = nameInput.value.trim();
-  const message = msgInput.value.trim();
-  if (!name || !message) return;
-
-  sendBtn.disabled = true;
-  sendBtn.textContent = 'Mengirim...';
-  statusMsg.textContent = '';
-  statusMsg.className = 'status-msg';
-
-  try {
-    // Use no-cors mode for Google Apps Script (returns opaque response)
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'add', name, message })
-    });
-
-    // Optimistic UI update
-    const newGreeting = {
-      name,
-      message,
-      timestamp: new Date().toISOString()
-    };
-
-    // Prepend to list
-    const currentHTML = listEl.innerHTML;
-    if (listEl.querySelector('.greeting-empty')) {
-      listEl.innerHTML = '';
-    }
-    const tempDiv = document.createElement('div');
-    tempDiv.className = 'greeting-item';
-    tempDiv.innerHTML = `
-      <div class="greeting-author">${escapeHtml(name)}</div>
-      <div class="greeting-time">just now</div>
-      <div class="greeting-message">${escapeHtml(message)}</div>
-    `;
-    listEl.insertBefore(tempDiv, listEl.firstChild);
-
-    statusMsg.textContent = 'Pesan berhasil dikirim! Terima kasih 💕';
-    statusMsg.className = 'status-msg success';
-    msgInput.value = '';
-
-    // Refresh from server after a short delay
-    setTimeout(loadGreetings, 1500);
-  } catch (err) {
-    console.error('Submit error:', err);
-    statusMsg.textContent = 'Gagal mengirim pesan. Coba lagi ya.';
-    statusMsg.className = 'status-msg error';
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.textContent = 'Kirim';
-  }
-});
-
-// Load on page open
-loadGreetings();
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
