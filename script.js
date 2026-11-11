@@ -4,8 +4,8 @@
   const token = (params.get('t') || '').trim();
 
   // ---- Edit these ----
-  const MAP_URL = '';        // paste a Google Maps link when the venue is confirmed
-  const YOUTUBE_URL = '';    // paste your full YouTube link here, e.g. 'https://youtu.be/abcDEF12345'
+  const MAP_URL = 'https://maps.app.goo.gl/jzW97oWrjWaQR2Rt7?g_st=ic';        // paste a Google Maps link when the venue is confirmed
+  const YOUTUBE_URL = 'https://youtu.be/hof1Qq7xeYA?si=Ibb_xZhso-halTkA';    // paste your full YouTube link here, e.g. 'https://youtu.be/abcDEF12345'
   const GALLERY_COUNT = 5;   // number of gallery photos
   const GALLERY = [];        // optional exact paths, e.g. ['images/1.jpg','images/2.jpg']; leave empty to auto-find photo1, image1 or 1 (jpg, jpeg, png, webp) in the images folder
   const PHOTOBOOTH_URL = '';  // link to your online photobooth ('' hides the button, the QR code still works)
@@ -69,6 +69,14 @@
 
   // Photobooth button
   if (PHOTOBOOTH_URL) { const pb = $('photoboothBtn'); pb.href = PHOTOBOOTH_URL; pb.hidden = false; }
+
+  // Placeholder captions ("Portrait photo", "QR code"...) are removed as soon as the real photo has loaded
+  document.querySelectorAll('.ph').forEach(ph => {
+    const img = ph.parentElement.querySelector('img');
+    if (!img) return;
+    const done = () => ph.remove();
+    if (img.complete && img.naturalWidth) done(); else img.addEventListener('load', done);
+  });
 
   // Map button
   const map = $('mapBtn');
