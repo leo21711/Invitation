@@ -1,4 +1,4 @@
- (function () {
+(function () {
   const $ = id => document.getElementById(id);
 
   // 🔴 --- CONFIGURATION --- 🔴
@@ -94,6 +94,28 @@
       g.appendChild(f);
     }
   }
+
+  // ==========================================
+  // 4b. Bride & Groom Photos
+  // Upload to /images as bride.(jpg|jpeg|png|webp) and groom.(...) – lowercase names
+  // ==========================================
+  const BRIDE_PHOTO = 'images/bride';
+  const GROOM_PHOTO = 'images/groom';
+
+  function loadPhoto(id, base) {
+    const img = $(id);
+    if (!img) return;
+    const exts = ['jpg', 'jpeg', 'png', 'webp'];
+    let i = 0;
+    img.onerror = () => {
+      i++;
+      if (i < exts.length) img.src = `${base}.${exts[i]}`;
+      else { img.onerror = null; img.hidden = true; }   // no file yet: gradient placeholder stays
+    };
+    img.src = `${base}.${exts[0]}`;
+  }
+  loadPhoto('bridePhoto', BRIDE_PHOTO);
+  loadPhoto('groomPhoto', GROOM_PHOTO);
 
   // ==========================================
   // 5. Map & Photobooth Buttons
