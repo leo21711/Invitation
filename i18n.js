@@ -15,7 +15,7 @@ window.I18N = {
     'couple.title': 'The Happy Couple',
     'couple.lede': 'With love, gratitude, and humble hearts, we invite you to share in the joy of our wedding celebration.',
     'couple.daughter': 'Daughter of',
-    'couple.son': 'Son of the late',
+    'couple.son': 'Son of',
     'save.title': 'Save the Date',
     'ev.reception': 'Reception',
     'ev.recDate': '13 December 2026<br>10.00 – 13.00 WIB',
