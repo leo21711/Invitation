@@ -370,3 +370,29 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================
+   COUPLE PHOTOS (circle + floral frame)
+   Bride: roses top-left / bottom-right
+   Groom: mirrored (leaves top-right, roses bottom-left)
+   The floral art is clipped on its two outer sides, so those sides are faded with a mask.
+   ============================================ */
+.couple-photo{position:relative;width:min(168px,44vw);margin:34px auto 48px}
+.cp-circle{position:relative;width:100%;aspect-ratio:1;overflow:hidden;border-radius:50%;
+  border:1px solid var(--gold);
+  box-shadow:0 0 0 6px var(--paper),0 0 0 7px var(--gold),0 12px 26px var(--shadow);
+  background:linear-gradient(160deg,#EADCCB,#D5DBC8)}
+.cp-circle img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.couple-photo .deco{z-index:2;-webkit-mask-composite:source-in;mask-composite:intersect}
+.couple-photo .cp-tl{top:-22%;left:-26%;right:auto;bottom:auto;width:56%;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%)}
+.couple-photo .cp-br{bottom:-20%;right:-26%;top:auto;left:auto;width:58%;
+  -webkit-mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to left,transparent 0,#000 16%);
+  mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to left,transparent 0,#000 16%)}
+.couple-photo .cp-tr{top:-18%;right:-24%;left:auto;bottom:auto;width:50%;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%),linear-gradient(to left,transparent 0,#000 16%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 16%),linear-gradient(to left,transparent 0,#000 16%)}
+.couple-photo .cp-bl{bottom:-20%;left:-26%;top:auto;right:auto;width:56%;
+  -webkit-mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%);
+  mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%)}
