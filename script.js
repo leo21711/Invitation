@@ -231,13 +231,8 @@
     });
   }
 
- // ============================================
-// GREETINGS CONFIGURATION
 // ============================================
-const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
-
-// ============================================
-// GREETINGS - FETCH & DISPLAY
+// GREETINGS - LOAD
 // ============================================
 async function loadGreetings() {
   try {
@@ -245,11 +240,11 @@ async function loadGreetings() {
       method: 'GET',
       mode: 'cors'
     });
-    
-    if (!response.ok) throw new Error('Network response was not ok');
-    
+
+    if (!response.ok) throw new Error('Network error');
+
     const data = await response.json();
-    
+
     if (data.status === 'success' && data.data && data.data.length > 0) {
       renderGreetings(data.data);
       document.getElementById('greetingsTotal').textContent = data.data.length;
@@ -257,43 +252,40 @@ async function loadGreetings() {
       renderEmptyState();
       document.getElementById('greetingsTotal').textContent = '0';
     }
-  } catch (error) {
-    console.error('Error loading greetings:', error);
+  } catch (err) {
+    console.error('Error loading greetings:', err);
     renderEmptyState();
   }
 }
 
 function renderGreetings(greetings) {
-  const listContainer = document.getElementById('greetingsList');
-  
-  // Sort by newest first (assuming timestamp exists)
+  const list = document.getElementById('greetingsList');
+
   const sorted = [...greetings].sort((a, b) => {
-    const timeA = new Date(a.timestamp || a.waktu || 0);
-    const timeB = new Date(b.timestamp || b.waktu || 0);
-    return timeB - timeA;
+    const tA = new Date(a.timestamp || a.waktu || 0);
+    const tB = new Date(b.timestamp || b.waktu || 0);
+    return tB - tA;
   });
-  
-  listContainer.innerHTML = sorted.map(g => {
+
+  list.innerHTML = sorted.map(g => {
     const name = escapeHtml(g.name || g.nama || 'Tamu');
     const message = escapeHtml(g.message || g.pesan || '');
     const time = g.timestamp || g.waktu || '';
     const attendance = g.attendance || g.kehadiran || '';
-    
-    let attendanceBadge = '';
+
+    let badge = '';
     if (attendance) {
-      const attendanceClass = 
-        attendance.toLowerCase().includes('hadir') || attendance === 'attend' ? 'attend' :
-        attendance.toLowerCase().includes('tidak') || attendance === 'not-attend' ? 'not-attend' :
+      const cls =
+        attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? 'attend' :
+        attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? 'not-attend' :
         'uncertain';
-      
-      const attendanceLabel = 
-        attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? '✓ Hadir' :
-        attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? '✗ Tidak Hadir' :
+      const label =
+        cls === 'attend' ? '✓ Hadir' :
+        cls === 'not-attend' ? '✗ Tidak Hadir' :
         '? Belum Pasti';
-      
-      attendanceBadge = `<span class="greeting-attendance ${attendanceClass}">${attendanceLabel}</span>`;
+      badge = `<span class="greeting-attendance ${cls}">${label}</span>`;
     }
-    
+
     return `
       <div class="greeting-card">
         <div class="greeting-header">
@@ -301,126 +293,110 @@ function renderGreetings(greetings) {
           <span class="greeting-time">${formatTimeAgo(time)}</span>
         </div>
         <div class="greeting-message">${message}</div>
-        ${attendanceBadge}
+        ${badge}
       </div>
     `;
   }).join('');
-  
-  // Scroll to top of container (newest greeting)
-  listContainer.scrollTop = 0;
+
+  list.scrollTop = 0;
 }
 
 function renderEmptyState() {
-  const listContainer = document.getElementById('greetingsList');
-  listContainer.innerHTML = '<div class="greetings-empty">Belum ada ucapan. Jadilah yang pertama!</div>';
+  document.getElementById('greetingsList').innerHTML =
+    '<div class="greetings-empty">Belum ada ucapan. Jadilah yang pertama!</div>';
 }
 
 // ============================================
-// GREETINGS - SUBMIT NEW GREETING
+// GREETINGS - SUBMIT
 // ============================================
 document.getElementById('greetingForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  
-  const submitBtn = document.getElementById('greetingSubmitBtn');
+
+  const btn = document.getElementById('greetingSubmitBtn');
   const messageInput = document.getElementById('greetingMessage');
-  const guestName = document.getElementById('greetingGuestName').value || 'Tamu';
+  const name = document.getElementById('greetingGuestName').value || 'Tamu';
   const message = messageInput.value.trim();
-  
+
   if (!message) {
-    alert('Silakan tulis ucapan Anda terlebih dahulu.');
+    alert('Silakan tulis ucapan Anda.');
     return;
   }
-  
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Mengirim...';
-  
+
+  btn.disabled = true;
+  btn.textContent = 'Mengirim...';
+
   try {
     const formData = new URLSearchParams();
     formData.append('action', 'add_greeting');
-    formData.append('name', guestName);
+    formData.append('name', name);
     formData.append('message', message);
     formData.append('attendance', currentAttendanceStatus || '');
-    
+
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: formData.toString()
     });
-    
-    // Success feedback
+
     messageInput.value = '';
-    submitBtn.textContent = '✓ Terkirim!';
-    
-    // Add the new greeting to the top of the list immediately
-    addGreetingToList(guestName, message, currentAttendanceStatus);
-    
-    // Reload full list to ensure sync
+    btn.textContent = '✓ Terkirim!';
+
+    // Add instantly to top of list
+    addGreetingToList(name, message, currentAttendanceStatus);
+
+    // Update counter
+    const counter = document.getElementById('greetingsTotal');
+    counter.textContent = parseInt(counter.textContent || 0) + 1;
+
     setTimeout(() => {
       loadGreetings();
-      submitBtn.textContent = 'Kirim Ucapan';
-      submitBtn.disabled = false;
+      btn.textContent = 'Kirim Ucapan';
+      btn.disabled = false;
     }, 1500);
-    
-  } catch (error) {
-    console.error('Error submitting greeting:', error);
-    alert('Gagal mengirim ucapan. Silakan coba lagi.');
-    submitBtn.textContent = 'Kirim Ucapan';
-    submitBtn.disabled = false;
+  } catch (err) {
+    console.error(err);
+    alert('Gagal mengirim. Silakan coba lagi.');
+    btn.textContent = 'Kirim Ucapan';
+    btn.disabled = false;
   }
 });
 
-// Add new greeting to the top of the list without full reload
 function addGreetingToList(name, message, attendance) {
-  const listContainer = document.getElementById('greetingsList');
-  
-  // Remove empty state if present
-  const emptyState = listContainer.querySelector('.greetings-empty');
-  if (emptyState) emptyState.remove();
-  
-  // Create new card
+  const list = document.getElementById('greetingsList');
+  const empty = list.querySelector('.greetings-empty');
+  if (empty) empty.remove();
+
+  let badge = '';
+  if (attendance) {
+    const cls =
+      attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? 'attend' :
+      attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? 'not-attend' :
+      'uncertain';
+    const label =
+      cls === 'attend' ? '✓ Hadir' :
+      cls === 'not-attend' ? '✗ Tidak Hadir' :
+      '? Belum Pasti';
+    badge = `<span class="greeting-attendance ${cls}">${label}</span>`;
+  }
+
   const card = document.createElement('div');
   card.className = 'greeting-card';
-  
-  let attendanceBadge = '';
-  if (attendance) {
-    const attendanceClass = 
-      attendance.toLowerCase().includes('hadir') || attendance === 'attend' ? 'attend' :
-      attendance.toLowerCase().includes('tidak') || attendance === 'not-attend' ? 'not-attend' :
-      'uncertain';
-    
-    const attendanceLabel = 
-      attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? '✓ Hadir' :
-      attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? '✗ Tidak Hadir' :
-      '? Belum Pasti';
-    
-    attendanceBadge = `<span class="greeting-attendance ${attendanceClass}">${attendanceLabel}</span>`;
-  }
-  
   card.innerHTML = `
     <div class="greeting-header">
       <span class="greeting-name">${escapeHtml(name)}</span>
       <span class="greeting-time">Baru saja</span>
     </div>
     <div class="greeting-message">${escapeHtml(message)}</div>
-    ${attendanceBadge}
+    ${badge}
   `;
-  
-  // Insert at the top
-  listContainer.insertBefore(card, listContainer.firstChild);
-  
-  // Scroll to top to show the new greeting
-  listContainer.scrollTop = 0;
-  
-  // Update counter
-  const counter = document.getElementById('greetingsTotal');
-  counter.textContent = parseInt(counter.textContent) + 1;
+
+  list.insertBefore(card, list.firstChild);
+  list.scrollTop = 0;
 }
 
 // ============================================
-// HELPER FUNCTIONS
+// HELPERS
 // ============================================
 function escapeHtml(text) {
   const div = document.createElement('div');
@@ -430,40 +406,28 @@ function escapeHtml(text) {
 
 function formatTimeAgo(timestamp) {
   if (!timestamp) return '';
-  
   const now = new Date();
   const time = new Date(timestamp);
-  const diffMs = now - time;
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-  
-  if (diffSec < 60) return 'Baru saja';
-  if (diffMin < 60) return `${diffMin} menit lalu`;
-  if (diffHour < 24) return `${diffHour} jam lalu`;
-  if (diffDay < 7) return `${diffDay} hari lalu`;
-  
-  return time.toLocaleDateString('id-ID', { 
-    day: 'numeric', 
-    month: 'short', 
-    year: 'numeric' 
+  const diff = Math.floor((now - time) / 1000);
+
+  if (diff < 60) return 'Baru saja';
+  if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} hari lalu`;
+
+  return time.toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'short', year: 'numeric'
   });
 }
 
 // ============================================
-// INITIALIZE GREETINGS ON PAGE LOAD
+// INIT
 // ============================================
-// Add this to your existing DOMContentLoaded or init function:
 document.addEventListener('DOMContentLoaded', function() {
-  // ... your existing initialization code ...
-  
-  // Load greetings
+  populateGuestName();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  loadGallery();
+  loadYouTube();
   loadGreetings();
-  
-  // Set guest name in greeting form
-  const guestName = getGuestName(); // your existing function
-  if (guestName) {
-    document.getElementById('greetingGuestName').value = guestName;
-  }
 });
