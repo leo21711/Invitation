@@ -396,3 +396,11 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 .couple-photo .cp-bl{bottom:-20%;left:-26%;top:auto;right:auto;width:56%;
   -webkit-mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%);
   mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 16%)}
+
+/* ============================================
+   LANGUAGE SWITCH (cover page)
+   ============================================ */
+.lang-switch{display:inline-flex;margin:0 0 16px;padding:3px;background:rgba(255,255,255,.55);border:1px solid var(--gold-light);border-radius:40px}
+.lang-switch button{min-width:86px;padding:6px 16px;background:none;border:0;border-radius:30px;color:var(--brown);font-size:16px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:background .25s,color .25s}
+.lang-switch button.active{background:var(--sage-dark);color:#fff}
+@media (max-height:780px){.cover-inner{padding-top:30px}.envelope{margin-top:30px;margin-bottom:10px}}
