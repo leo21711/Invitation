@@ -231,118 +231,239 @@
     });
   }
 
-  // ==========================================
-  // 9. GREETINGS / DOA & UCAPAN
-  // ==========================================
-  const greetingForm = $('greetingForm');
-  const greetingMessageInput = $('greetingMessage');
-  const greetingSubmitBtn = $('greetingSubmitBtn');
-  const greetingError = $('greetingError');
-  const greetingThanks = $('greetingThanks');
-  const greetingsList = $('greetingsList');
-  const greetingsLoading = $('greetingsLoading');
+ // ============================================
+// GREETINGS CONFIGURATION
+// ============================================
+const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function timeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const mins = Math.floor(diffMs / 60000);
-    const hours = Math.floor(mins / 60);
-    const days = Math.floor(hours / 24);
-    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    if (mins > 0) return `${mins} min ago`;
-    return 'Just now';
-  }
-
-  async function loadGreetings() {
-    try {
-      const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list_greetings`);
-      const data = await response.json();
-      if (greetingsLoading) greetingsLoading.style.display = 'none';
-
-      if (!data.greetings || data.greetings.length === 0) {
-        greetingsList.innerHTML = '<p class="lede">Be the first to leave a beautiful message! 💌</p>';
-        return;
-      }
-
-      greetingsList.innerHTML = data.greetings.map(g => `
-        <div class="greeting-item">
-          <div class="greeting-author">${escapeHtml(g.name)}</div>
-          <div class="greeting-time">${timeAgo(g.timestamp)}</div>
-          <div class="greeting-message">${escapeHtml(g.message)}</div>
-        </div>
-      `).join('');
-    } catch (error) {
-      console.error('Failed to load greetings:', error);
-      if (greetingsLoading) greetingsLoading.textContent = 'Unable to load messages.';
-    }
-  }
-
-  if (greetingForm) {
-    greetingForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = $('greetingName').value.trim();
-      const message = greetingMessageInput.value.trim();
-      
-      if (!name || !message) {
-        greetingError.textContent = 'Please fill in both your name and message.';
-        greetingError.hidden = false;
-        return;
-      }
-
-      greetingError.hidden = true;
-      greetingSubmitBtn.disabled = true;
-      greetingSubmitBtn.textContent = 'Sending...';
-
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'add_greeting', name: name, message: message })
-        });
-
-        if (greetingsList.querySelector('.lede')) greetingsList.innerHTML = '';
-        
-        const newGreetingHTML = `
-          <div class="greeting-item new-message">
-            <div class="greeting-author">${escapeHtml(name)}</div>
-            <div class="greeting-time">Just now</div>
-            <div class="greeting-message">${escapeHtml(message)}</div>
-          </div>
-        `;
-        greetingsList.insertAdjacentHTML('afterbegin', newGreetingHTML);
-
-        // Remove animation class after it plays
-        setTimeout(() => {
-          const firstItem = greetingsList.querySelector('.greeting-item');
-          if (firstItem) firstItem.classList.remove('new-message');
-        }, 600);
-
-        greetingForm.reset();
-        if (guestName && guestName !== 'Valued Guest') $('greetingName').value = guestName;
-        if (greetingThanks) greetingThanks.hidden = false;
-        greetingSubmitBtn.disabled = false;
-        greetingSubmitBtn.textContent = 'Send Wishes';
-
-        setTimeout(loadGreetings, 2000);
-
-      } catch (error) {
-        console.error('Submit error:', error);
-        greetingError.textContent = 'Failed to send. Please check your connection and try again.';
-        greetingError.hidden = false;
-        greetingSubmitBtn.disabled = false;
-        greetingSubmitBtn.textContent = 'Send Wishes';
-      }
+// ============================================
+// GREETINGS - FETCH & DISPLAY
+// ============================================
+async function loadGreetings() {
+  try {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=list`, {
+      method: 'GET',
+      mode: 'cors'
     });
+    
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const data = await response.json();
+    
+    if (data.status === 'success' && data.data && data.data.length > 0) {
+      renderGreetings(data.data);
+      document.getElementById('greetingsTotal').textContent = data.data.length;
+    } else {
+      renderEmptyState();
+      document.getElementById('greetingsTotal').textContent = '0';
+    }
+  } catch (error) {
+    console.error('Error loading greetings:', error);
+    renderEmptyState();
   }
+}
 
-  document.addEventListener('DOMContentLoaded', loadGreetings);
-})();
+function renderGreetings(greetings) {
+  const listContainer = document.getElementById('greetingsList');
+  
+  // Sort by newest first (assuming timestamp exists)
+  const sorted = [...greetings].sort((a, b) => {
+    const timeA = new Date(a.timestamp || a.waktu || 0);
+    const timeB = new Date(b.timestamp || b.waktu || 0);
+    return timeB - timeA;
+  });
+  
+  listContainer.innerHTML = sorted.map(g => {
+    const name = escapeHtml(g.name || g.nama || 'Tamu');
+    const message = escapeHtml(g.message || g.pesan || '');
+    const time = g.timestamp || g.waktu || '';
+    const attendance = g.attendance || g.kehadiran || '';
+    
+    let attendanceBadge = '';
+    if (attendance) {
+      const attendanceClass = 
+        attendance.toLowerCase().includes('hadir') || attendance === 'attend' ? 'attend' :
+        attendance.toLowerCase().includes('tidak') || attendance === 'not-attend' ? 'not-attend' :
+        'uncertain';
+      
+      const attendanceLabel = 
+        attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? '✓ Hadir' :
+        attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? '✗ Tidak Hadir' :
+        '? Belum Pasti';
+      
+      attendanceBadge = `<span class="greeting-attendance ${attendanceClass}">${attendanceLabel}</span>`;
+    }
+    
+    return `
+      <div class="greeting-card">
+        <div class="greeting-header">
+          <span class="greeting-name">${name}</span>
+          <span class="greeting-time">${formatTimeAgo(time)}</span>
+        </div>
+        <div class="greeting-message">${message}</div>
+        ${attendanceBadge}
+      </div>
+    `;
+  }).join('');
+  
+  // Scroll to top of container (newest greeting)
+  listContainer.scrollTop = 0;
+}
+
+function renderEmptyState() {
+  const listContainer = document.getElementById('greetingsList');
+  listContainer.innerHTML = '<div class="greetings-empty">Belum ada ucapan. Jadilah yang pertama!</div>';
+}
+
+// ============================================
+// GREETINGS - SUBMIT NEW GREETING
+// ============================================
+document.getElementById('greetingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('greetingSubmitBtn');
+  const messageInput = document.getElementById('greetingMessage');
+  const guestName = document.getElementById('greetingGuestName').value || 'Tamu';
+  const message = messageInput.value.trim();
+  
+  if (!message) {
+    alert('Silakan tulis ucapan Anda terlebih dahulu.');
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Mengirim...';
+  
+  try {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add_greeting');
+    formData.append('name', guestName);
+    formData.append('message', message);
+    formData.append('attendance', currentAttendanceStatus || '');
+    
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData.toString()
+    });
+    
+    // Success feedback
+    messageInput.value = '';
+    submitBtn.textContent = '✓ Terkirim!';
+    
+    // Add the new greeting to the top of the list immediately
+    addGreetingToList(guestName, message, currentAttendanceStatus);
+    
+    // Reload full list to ensure sync
+    setTimeout(() => {
+      loadGreetings();
+      submitBtn.textContent = 'Kirim Ucapan';
+      submitBtn.disabled = false;
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Error submitting greeting:', error);
+    alert('Gagal mengirim ucapan. Silakan coba lagi.');
+    submitBtn.textContent = 'Kirim Ucapan';
+    submitBtn.disabled = false;
+  }
+});
+
+// Add new greeting to the top of the list without full reload
+function addGreetingToList(name, message, attendance) {
+  const listContainer = document.getElementById('greetingsList');
+  
+  // Remove empty state if present
+  const emptyState = listContainer.querySelector('.greetings-empty');
+  if (emptyState) emptyState.remove();
+  
+  // Create new card
+  const card = document.createElement('div');
+  card.className = 'greeting-card';
+  
+  let attendanceBadge = '';
+  if (attendance) {
+    const attendanceClass = 
+      attendance.toLowerCase().includes('hadir') || attendance === 'attend' ? 'attend' :
+      attendance.toLowerCase().includes('tidak') || attendance === 'not-attend' ? 'not-attend' :
+      'uncertain';
+    
+    const attendanceLabel = 
+      attendance === 'attend' || attendance.toLowerCase().includes('hadir') ? '✓ Hadir' :
+      attendance === 'not-attend' || attendance.toLowerCase().includes('tidak') ? '✗ Tidak Hadir' :
+      '? Belum Pasti';
+    
+    attendanceBadge = `<span class="greeting-attendance ${attendanceClass}">${attendanceLabel}</span>`;
+  }
+  
+  card.innerHTML = `
+    <div class="greeting-header">
+      <span class="greeting-name">${escapeHtml(name)}</span>
+      <span class="greeting-time">Baru saja</span>
+    </div>
+    <div class="greeting-message">${escapeHtml(message)}</div>
+    ${attendanceBadge}
+  `;
+  
+  // Insert at the top
+  listContainer.insertBefore(card, listContainer.firstChild);
+  
+  // Scroll to top to show the new greeting
+  listContainer.scrollTop = 0;
+  
+  // Update counter
+  const counter = document.getElementById('greetingsTotal');
+  counter.textContent = parseInt(counter.textContent) + 1;
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatTimeAgo(timestamp) {
+  if (!timestamp) return '';
+  
+  const now = new Date();
+  const time = new Date(timestamp);
+  const diffMs = now - time;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+  
+  if (diffSec < 60) return 'Baru saja';
+  if (diffMin < 60) return `${diffMin} menit lalu`;
+  if (diffHour < 24) return `${diffHour} jam lalu`;
+  if (diffDay < 7) return `${diffDay} hari lalu`;
+  
+  return time.toLocaleDateString('id-ID', { 
+    day: 'numeric', 
+    month: 'short', 
+    year: 'numeric' 
+  });
+}
+
+// ============================================
+// INITIALIZE GREETINGS ON PAGE LOAD
+// ============================================
+// Add this to your existing DOMContentLoaded or init function:
+document.addEventListener('DOMContentLoaded', function() {
+  // ... your existing initialization code ...
+  
+  // Load greetings
+  loadGreetings();
+  
+  // Set guest name in greeting form
+  const guestName = getGuestName(); // your existing function
+  if (guestName) {
+    document.getElementById('greetingGuestName').value = guestName;
+  }
+});
