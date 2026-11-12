@@ -15,7 +15,10 @@
   let guestName = (params.get('to') || '').trim();
 
   if (!guestName) {
-    const path = decodeURIComponent(window.location.pathname).replace(/^\/+|\/+$/g, '');
+    // Path links: "+" or "%20" both mean a space (a literal plus must be written %2B)
+    let raw = window.location.pathname.replace(/\+/g, ' ');
+    try { raw = decodeURIComponent(raw); } catch (e) {}   // a stray "%" must not break the page
+    const path = raw.replace(/^\/+|\/+$/g, '').trim();
     if (path && path !== 'index.html') guestName = path;
   }
   if (guestName) {
