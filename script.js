@@ -22,6 +22,29 @@
     try { guestName = decodeURIComponent(guestName); } catch (e) {}
   }
 
+  // ==========================================
+  // 1b. Language: English by default. ?lang=id, a saved choice, or the cover switch selects Bahasa.
+  // ==========================================
+  const I18N = window.I18N || { en: {}, id: {} };
+
+  function pickLang() {
+    const q = (params.get('lang') || '').toLowerCase();
+    if (q === 'id' || q === 'en') return q;
+    try {
+      const saved = localStorage.getItem('fb_lang');
+      if (saved === 'id' || saved === 'en') return saved;
+    } catch (e) {}
+    return 'en';
+  }
+  let lang = pickLang();
+
+  function t(key, vars) {
+    let str = (I18N[lang] && I18N[lang][key] != null) ? I18N[lang][key]
+            : (I18N.en[key] != null ? I18N.en[key] : key);
+    if (vars) Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
+    return str;
+  }
+
   // Remembers this guest's RSVP answer so the greeting badge survives a reload
   const STATUS_KEY = 'fb_rsvp_status:' + guestName;
   let currentAttendanceStatus = '';   // '', 'attend' or 'not-attend'
@@ -30,25 +53,27 @@
   // ==========================================
   // 2. Populate Guest Name
   // ==========================================
-  function setName(name) {
-    const shown = name || 'Valued Guest';
+  function renderGuestName() {
+    const shown = guestName || t('guest.fallback');
     ['guestNameCover', 'guestNameLine', 'guestNameBody'].forEach(id => {
       if ($(id)) $(id).textContent = shown;
     });
-    const field = $('guestName');
-    if (field) {
-      if (name) {                      // personalised link: locked, as before
-        field.value = name;
-        field.readOnly = true;
-      } else {                         // bare link: let the guest type their name
-        field.value = '';
-        field.readOnly = false;
-        field.placeholder = 'Type your name';
-      }
-    }
-    if ($('greetingGuestName')) $('greetingGuestName').value = name || '';
+    if ($('greetingGuestName')) $('greetingGuestName').value = guestName || '';
   }
-  setName(guestName);
+
+  function initNameField() {
+    const field = $('guestName');
+    if (!field) return;
+    if (guestName) {                   // personalised link: locked, as before
+      field.value = guestName;
+      field.readOnly = true;
+    } else {                           // bare link: the guest types their name
+      field.value = '';
+      field.readOnly = false;
+    }
+  }
+  initNameField();
+  renderGuestName();
 
   function currentName() {
     const f = $('guestName');
@@ -75,7 +100,7 @@
 
   const vid = youtubeId(YOUTUBE_URL);
   if (vid && $('videoBox')) {
-    $('videoBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(vid)}?rel=0" title="Our story" allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>`;
+    $('videoBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(vid)}?rel=0" title="${t('story.videoTitle')}" allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>`;
   }
 
   // ==========================================
@@ -87,7 +112,7 @@
       const f = document.createElement('figure');
       f.className = 'tile';
       const im = new Image();
-      im.alt = `Fira and Baqi, photo ${n}`;
+      im.alt = t('gallery.alt', { n });
       im.src = `images/photo${n}.jpg`;
       im.onerror = () => { im.onerror = null; im.src = `images/image${n}.jpg`; };
       f.appendChild(im);
@@ -136,20 +161,28 @@
     if (err) { err.textContent = m; err.hidden = false; }
   }
 
+  let thanksState = null;
+
+  function renderThanks() {
+    if (!thanksState) return;
+    const n = currentName() ? ', ' + currentName() : '';
+    if (thanksState.status === 'attending') {
+      const pax = thanksState.pax;
+      $('thanksTitle').textContent = t('thanks.yesTitle') + n;
+      $('thanksText').textContent = t('thanks.yesText', { n: pax, guests: pax > 1 ? t('unit.guests') : t('unit.guest') });
+    } else {
+      $('thanksTitle').textContent = t('thanks.noTitle') + n;
+      $('thanksText').textContent = t('thanks.noText');
+    }
+  }
+
   function showThanks(status, pax) {
     form.hidden = true;
     const lede = $('rsvpLede');
     if (lede) lede.hidden = true;
     $('thanks').hidden = false;
-    const n = currentName() ? ', ' + currentName() : '';
-
-    if (status === 'attending') {
-      $('thanksTitle').textContent = 'Thank you' + n;
-      $('thanksText').textContent = `We have noted ${pax} ${pax > 1 ? 'guests' : 'guest'} for 13 December 2026. We look forward to celebrating with you, insha’Allah.`;
-    } else {
-      $('thanksTitle').textContent = 'Thank you for letting us know' + n;
-      $('thanksText').textContent = 'We are sorry you cannot join us, and we are grateful for your prayers and good wishes.';
-    }
+    thanksState = { status: status, pax: pax };
+    renderThanks();
   }
 
   function togglePax() {
@@ -173,16 +206,16 @@
       e.preventDefault();
       err.hidden = true;
       const checked = form.querySelector('input[name=status]:checked');
-      if (!checked) return showError('Please choose whether you will attend.');
+      if (!checked) return showError(t('rsvp.errChoose'));
 
       const name = currentName();
-      if (!name) return showError('Please enter your name.');
+      if (!name) return showError(t('rsvp.errName'));
 
       const status = checked.value;
       const pax = status === 'attending' ? parseInt($('pax').value, 10) : 0;
 
       btn.disabled = true;
-      btn.textContent = 'Sending…';
+      btn.textContent = t('rsvp.sending');
 
       try {
         // no-cors: the reply is opaque, so success cannot be verified from the browser
@@ -196,10 +229,10 @@
         try { localStorage.setItem(STATUS_KEY, currentAttendanceStatus); } catch (x) {}
         showThanks(status, pax);
       } catch (ex) {
-        showError('Network error. Please check your connection and try again.');
+        showError(t('rsvp.errNet'));
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Send reply';
+        btn.textContent = t('rsvp.send');
       }
     });
   }
@@ -241,7 +274,7 @@
   function setMusic(on) {
     if (!music) return;
     music.classList.toggle('off', !on);
-    music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    music.setAttribute('aria-label', on ? t('music.pause') : t('music.play'));
   }
 
   function playMusic() {
@@ -288,11 +321,11 @@
     if (isNaN(time)) return '';
     const diff = Math.floor((Date.now() - time) / 1000);
 
-    if (diff < 60) return 'Baru saja';
-    if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
-    if (diff < 604800) return `${Math.floor(diff / 86400)} hari lalu`;
-    return time.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (diff < 60) return t('time.now');
+    if (diff < 3600) return t('time.min', { n: Math.floor(diff / 60) });
+    if (diff < 86400) return t('time.hour', { n: Math.floor(diff / 3600) });
+    if (diff < 604800) return t('time.day', { n: Math.floor(diff / 86400) });
+    return time.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
   function badgeHtml(attendance) {
@@ -301,7 +334,7 @@
     const cls = (a === 'attend' || a.includes('hadir') && !a.includes('tidak') || a === 'attending') ? 'attend'
               : (a === 'not-attend' || a.includes('tidak') || a === 'declined') ? 'not-attend'
               : 'uncertain';
-    const label = cls === 'attend' ? '✓ Hadir' : cls === 'not-attend' ? '✗ Tidak Hadir' : '? Belum Pasti';
+    const label = cls === 'attend' ? t('badge.attend') : cls === 'not-attend' ? t('badge.not') : t('badge.unsure');
     return `<span class="greeting-attendance ${cls}">${label}</span>`;
   }
 
@@ -319,12 +352,15 @@
 
   function renderEmptyState() {
     const list = $('greetingsList');
-    if (list) list.innerHTML = '<div class="greetings-empty">Belum ada ucapan. Jadilah yang pertama!</div>';
+    if (list) list.innerHTML = '<div class="greetings-empty" data-i18n="gr.empty">' + t('gr.empty') + '</div>';
   }
+
+  let greetingsCache = null;
 
   function renderGreetings(greetings) {
     const list = $('greetingsList');
     if (!list) return;
+    greetingsCache = greetings;
     const sorted = [...greetings].sort((a, b) => new Date(b.timestamp || b.waktu || 0) - new Date(a.timestamp || a.waktu || 0));
     list.innerHTML = sorted.map(x => cardHtml(
       x.name || x.nama || 'Tamu',
@@ -361,7 +397,7 @@
     const empty = list.querySelector('.greetings-empty');
     if (empty) empty.remove();
     const wrap = document.createElement('div');
-    wrap.innerHTML = cardHtml(name, message, 'Baru saja', attendance).trim();
+    wrap.innerHTML = cardHtml(name, message, t('time.now'), attendance).trim();
     list.insertBefore(wrap.firstElementChild, list.firstChild);
     list.scrollTop = 0;
   }
@@ -373,13 +409,13 @@
 
       const gBtn = $('greetingSubmitBtn');
       const messageInput = $('greetingMessage');
-      const name = currentName() || 'Tamu';
+      const name = currentName() || t('guest.anon');
       const message = messageInput.value.trim();
 
-      if (!message) { alert('Silakan tulis ucapan Anda.'); return; }
+      if (!message) { alert(t('gr.errEmpty')); return; }
 
       gBtn.disabled = true;
-      gBtn.textContent = 'Mengirim...';
+      gBtn.textContent = t('gr.sending');
 
       try {
         const body = new URLSearchParams();
@@ -396,22 +432,55 @@
         });
 
         messageInput.value = '';
-        gBtn.textContent = '✓ Terkirim!';
+        gBtn.textContent = t('gr.sent');
 
         // Show it immediately; a re-fetch now could race the sheet write and make it vanish
         addGreetingToList(name, message, currentAttendanceStatus);
         const counter = $('greetingsTotal');
         if (counter) counter.textContent = (parseInt(counter.textContent, 10) || 0) + 1;
 
-        setTimeout(() => { gBtn.textContent = 'Kirim Ucapan'; gBtn.disabled = false; }, 1500);
+        setTimeout(() => { gBtn.textContent = t('gr.send'); gBtn.disabled = false; }, 1500);
       } catch (ex) {
         console.error(ex);
-        alert('Gagal mengirim. Silakan coba lagi.');
-        gBtn.textContent = 'Kirim Ucapan';
+        alert(t('gr.errSend'));
+        gBtn.textContent = t('gr.send');
         gBtn.disabled = false;
       }
     });
   }
+
+  // ==========================================
+  // 10. Apply language (static text, attributes, and anything rendered by script)
+  // ==========================================
+  function applyLang(l) {
+    lang = l;
+    document.documentElement.lang = l;
+    document.title = t('page.title');
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n')); });
+    ['placeholder', 'alt', 'title'].forEach(a => {
+      document.querySelectorAll('[data-i18n-' + a + ']').forEach(el => el.setAttribute(a, t(el.getAttribute('data-i18n-' + a))));
+    });
+    document.querySelectorAll('.lang-switch button').forEach(b => {
+      const on = b.dataset.lang === l;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on);
+    });
+    renderGuestName();
+    document.querySelectorAll('#gallery img').forEach((im, i) => { im.alt = t('gallery.alt', { n: i + 1 }); });
+    const frame = $('videoBox') && $('videoBox').querySelector('iframe');
+    if (frame) frame.title = t('story.videoTitle');
+    if (audio && music) setMusic(!audio.paused);
+    if (thanksState && !$('thanks').hidden) renderThanks();
+    if (greetingsCache) renderGreetings(greetingsCache);
+  }
+
+  document.querySelectorAll('.lang-switch button').forEach(b => {
+    b.addEventListener('click', () => {
+      try { localStorage.setItem('fb_lang', b.dataset.lang); } catch (e) {}
+      applyLang(b.dataset.lang);
+    });
+  });
+  applyLang(lang);
 
   loadGreetings();
 })();
