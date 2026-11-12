@@ -237,33 +237,33 @@
       <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden>Open the photobooth</a>
     </section>
 
-    <!-- ✨ NEW: GREETINGS / DOA & UCAPAN SECTION ✨ -->
-    <section class="block" id="greetingsSection">
-      <h2 class="sec-title">Doa &amp; Ucapan</h2>
-      <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-      <p class="lede" style="text-align: center;">Send your prayers and wishes to the happy couple.</p>
-      
-      <form id="greetingForm" style="max-width: 500px; margin: 0 auto;">
-        <label for="greetingName">Your name</label>
-        <input type="text" id="greetingName" name="greetingName" required maxlength="100">
-        
-        <label for="greetingMessage" style="margin-top: 1rem; display: block;">Your message / prayer</label>
-        <textarea id="greetingMessage" name="greetingMessage" rows="4" required maxlength="500"></textarea>
-        
-        <p class="msg error" id="greetingError" hidden></p>
-        <button type="submit" id="greetingSubmitBtn" class="btn" style="margin-top: 1rem; width: 100%;">Send Wishes</button>
-      </form>
+<!-- GREETINGS / DOA & UCAPAN SECTION -->
+<section id="greetings" class="greetings-section">
+  <h2>Doa & Ucapan</h2>
+  <p class="subtitle">Kirimkan doa dan ucapan terbaik untuk kedua mempelai</p>
 
-      <div id="greetingThanks" class="thanks" hidden style="text-align: center; margin-top: 1rem;">
-        <h4>Thank you for your beautiful wishes!</h4>
-      </div>
+  <!-- Counter showing total greetings -->
+  <div class="greetings-counter" id="greetingsCounter">
+    Total ucapan: <span id="greetingsTotal">0</span>
+  </div>
 
-      <div class="greetings-list" id="greetingsList">
-        <p class="lede" style="text-align: center; font-size: 0.9rem;" id="greetingsLoading">Loading messages...</p>
-        <!-- Messages will be injected here by JavaScript -->
-      </div>
-    </section>
-    <!-- ✨ END: GREETINGS SECTION ✨ -->
+  <!-- Scrollable greetings list -->
+  <div class="greetings-list" id="greetingsList">
+    <div class="greetings-empty">Belum ada ucapan. Jadilah yang pertama!</div>
+  </div>
+
+  <!-- Greeting submission form -->
+  <form class="greeting-form" id="greetingForm">
+    <input type="hidden" id="greetingGuestName" name="guest_name" value="">
+    <textarea 
+      id="greetingMessage" 
+      name="message" 
+      placeholder="Tulis doa dan ucapan Anda di sini..." 
+      maxlength="500"
+      required></textarea>
+    <button type="submit" id="greetingSubmitBtn">Kirim Ucapan</button>
+  </form>
+</section>
 
     <!-- Closing -->
     <section class="closing block">
