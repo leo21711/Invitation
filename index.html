@@ -21,15 +21,15 @@
     
     <div class="cover-inner">
       <div class="cover-head">
-        <p class="eyebrow">The Wedding Reception</p>
+        <p class="eyebrow" data-i18n="eyebrow">The Wedding Reception</p>
         <h1 class="names">Fira <span>&</span> Baqi</h1>
-        <p class="cdate">Sunday, 13 December 2026</p>
+        <p class="cdate" data-i18n="date.long">Sunday, 13 December 2026</p>
       </div>
       
       <div class="envelope" id="envelope">
         <div class="env-back"></div>
         <div class="env-card">
-          <p class="small">The Wedding Reception</p>
+          <p class="small" data-i18n="eyebrow">The Wedding Reception</p>
           <h2 class="names" style="font-size: clamp(32px, 10vw, 48px);">Fira <span>&</span> Baqi</h2>
           <p class="card-guest" id="guestNameLine">Valued Guest</p>
         </div>
@@ -48,9 +48,13 @@
       </div>
 
       <div class="cover-foot">
-        <p class="to-line">Dear <strong id="guestNameCover">Valued Guest</strong></p>
+        <p class="to-line"><span data-i18n="cover.dear">Dear</span> <strong id="guestNameCover">Valued Guest</strong></p>
+        <div class="lang-switch" role="group" aria-label="Language / Bahasa">
+          <button type="button" data-lang="en" class="active">English</button>
+          <button type="button" data-lang="id">Bahasa</button>
+        </div>
         <button id="openBtn" class="btn open-btn">
-          Open Invitation 
+          <span data-i18n="cover.open">Open Invitation</span> 
           <span class="sep"></span> 
           <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
@@ -68,33 +72,33 @@
     <!-- Hero -->
     <section class="hero block">
       <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-      <p class="eyebrow">The Wedding Reception</p>
+      <p class="eyebrow" data-i18n="eyebrow">The Wedding Reception</p>
       <h1 class="names">Fira <span>&</span> Baqi</h1>
-      <p class="date-line">Sunday, 13 December 2026</p>
+      <p class="date-line" data-i18n="date.long">Sunday, 13 December 2026</p>
       <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-      <p class="lede">You are invited, <strong id="guestNameBody">Valued Guest</strong></p>
+      <p class="lede"><span data-i18n="hero.invited">You are invited,</span> <strong id="guestNameBody">Valued Guest</strong></p>
     </section>
 
     <!-- Portrait & Verse -->
     <section class="block alt">
       <div class="portrait-wrap">
         <div class="portrait">
-          <img src="images/portrait.jpg" alt="Fira and Baqi">
+          <img src="images/portrait.jpg" alt="Fira and Baqi" data-i18n-alt="portrait.alt">
         </div>
         <div class="deco pf d-br"></div>
       </div>
       <blockquote class="verse">
-        “And We created you in pairs”
+        <span data-i18n="verse.text">“And We created you in pairs”</span>
         <cite>Q.S. An-Naba : 8</cite>
       </blockquote>
     </section>
 
     <!-- ✨ NEW: THE COUPLE SECTION ✨ -->
     <section class="block alt">
-      <h2 class="sec-title">The Happy Couple</h2>
+      <h2 class="sec-title" data-i18n="couple.title">The Happy Couple</h2>
       <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
       
-      <p class="lede" style="text-align: center; font-style: italic; margin-bottom: 2rem;">
+      <p class="lede" data-i18n="couple.lede" style="text-align: center; font-style: italic; margin-bottom: 2rem;">
         With love, gratitude, and humble hearts, we invite you to share in the joy of our wedding celebration.
       </p>
       
@@ -109,7 +113,7 @@
           </div>
           <h3 class="names" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Naja Safira Al Faiqah, S.T., M.T.</h3>
           <p class="text" style="font-size: 0.95rem; line-height: 1.6;">
-            Daughter of<br>
+            <span data-i18n="couple.daughter">Daughter of</span><br>
             <strong>Bambang Handoko Susilo, S.T., M.Kes.</strong><br>
             &amp; <strong>Dewi Peny Herdianawati, S.E.</strong>
           </p>
@@ -127,7 +131,7 @@
           </div>
           <h3 class="names" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Izzuddin Baqi, S.T.</h3>
           <p class="text" style="font-size: 0.95rem; line-height: 1.6;">
-            Son of the late<br>
+            <span data-i18n="couple.son">Son of the late</span><br>
             <strong>Drs. Noor Hadi, M.Ag., M.Pd.</strong><br>
             &amp; <strong>Dr. dr. Siti Soekiswati, S.H., M.H., C.Med.</strong>
           </p>
@@ -138,7 +142,7 @@
 
     <!-- Events (Save the Date) -->
     <section class="block">
-      <h2 class="sec-title">Save the Date</h2>
+      <h2 class="sec-title" data-i18n="save.title">Save the Date</h2>
       <div class="events">
         <!-- Akad Nikah with Islamic Star Icon -->
         <div class="event">
@@ -155,15 +159,15 @@
         <!-- Resepsi with Highlight Class -->
         <div class="event highlight">
           <svg class="i" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
-          <p class="label">Reception</p>
-          <p>13 December 2026<br>10.00 – 13.00 WIB</p>
+          <p class="label" data-i18n="ev.reception">Reception</p>
+          <p data-i18n="ev.recDate">13 December 2026<br>10.00 – 13.00 WIB</p>
         </div>
       </div>
     </section>
 
     <!-- Venue -->
     <section class="block alt venue">
-      <h2 class="sec-title">The Venue</h2>
+      <h2 class="sec-title" data-i18n="venue.title">The Venue</h2>
       <p class="name">Astoria Convention Hall, Mojokerto</p>
       <p class="addr">Jl. Gajah Mada No.61, Mojokerto</p>
       
@@ -173,15 +177,15 @@
 
       <a href="#" id="mapBtn" class="btn ghost" target="_blank" rel="noopener">
         <svg class="i" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Open in Google Maps
+        <span data-i18n="venue.map">Open in Google Maps</span>
       </a>
     </section>
 
     <!-- Story & Video -->
     <section class="block">
-      <h2 class="sec-title">Our Story</h2>
+      <h2 class="sec-title" data-i18n="story.title">Our Story</h2>
       <div class="story-card">
-        <p class="text">Two hearts, one journey, towards a life together in His pleasure.</p>
+        <p class="text" data-i18n="story.text">Two hearts, one journey, towards a life together in His pleasure.</p>
         <div class="video-box" id="videoBox">
           <div class="ph">Our memories on video<small>add your YouTube link in script.js</small></div>
         </div>
@@ -190,82 +194,82 @@
 
     <!-- RSVP -->
     <section class="block alt" id="rsvpSection">
-      <h2 class="sec-title">RSVP</h2>
-      <p class="lede" id="rsvpLede">Kindly confirm your attendance before 1 December 2026.</p>
+      <h2 class="sec-title" data-i18n="rsvp.title">RSVP</h2>
+      <p class="lede" id="rsvpLede" data-i18n="rsvp.lede">Kindly confirm your attendance before 1 December 2026.</p>
       
       <form id="rsvpForm">
-        <label for="guestName">Your name</label>
-        <input type="text" id="guestName" name="guestName" readonly>
+        <label for="guestName" data-i18n="rsvp.name">Your name</label>
+        <input type="text" id="guestName" name="guestName" data-i18n-placeholder="rsvp.namePh" readonly>
         
         <fieldset>
-          <legend>Will you attend?</legend>
+          <legend data-i18n="rsvp.legend">Will you attend?</legend>
           <label class="choice">
             <input type="radio" name="status" value="attending" id="statusAttending">
-            <span>Joyfully attending</span>
+            <span data-i18n="rsvp.yes">Joyfully attending</span>
           </label>
           <label class="choice">
             <input type="radio" name="status" value="declined" id="statusDeclined">
-            <span>Regretfully unable</span>
+            <span data-i18n="rsvp.no">Regretfully unable</span>
           </label>
         </fieldset>
 
         <div id="paxWrap" hidden>
-          <label for="pax">Number of guests (maximum 3)</label>
+          <label for="pax" data-i18n="rsvp.pax">Number of guests (maximum 3)</label>
           <select id="pax" name="pax">
-            <option value="1">1 guest</option>
-            <option value="2">2 guests</option>
-            <option value="3">3 guests</option>
+            <option value="1" data-i18n="rsvp.g1">1 guest</option>
+            <option value="2" data-i18n="rsvp.g2">2 guests</option>
+            <option value="3" data-i18n="rsvp.g3">3 guests</option>
           </select>
         </div>
 
         <p class="msg error" id="formError" hidden></p>
-        <button type="submit" id="submitBtn" class="btn">Send reply</button>
+        <button type="submit" id="submitBtn" class="btn" data-i18n="rsvp.send">Send reply</button>
       </form>
 
       <div id="thanks" class="thanks" hidden>
         <h4 id="thanksTitle">Thank you</h4>
         <p id="thanksText"></p>
-        <button type="button" id="editBtn" class="link">Change my reply</button>
+        <button type="button" id="editBtn" class="link" data-i18n="rsvp.edit">Change my reply</button>
       </div>
     </section>
 
     <!-- Gallery -->
     <section class="block">
-      <h2 class="sec-title">Our Gallery</h2>
+      <h2 class="sec-title" data-i18n="gallery.title">Our Gallery</h2>
       <div class="gallery" id="gallery"></div>
     </section>
 
     <!-- Photobooth -->
     <section class="block alt">
-      <h2 class="sec-title">Memory Booth</h2>
-      <p class="lede">Join us at the reception and take a photo in our wedding frames, a small keepsake of the day you shared with us.</p>
+      <h2 class="sec-title" data-i18n="booth.title">Memory Booth</h2>
+      <p class="lede" data-i18n="booth.lede">Join us at the reception and take a photo in our wedding frames, a small keepsake of the day you shared with us.</p>
       <div class="qr">
-        <img src="images/photobooth-qr.png" alt="Photobooth QR Code">
+        <img src="images/photobooth-qr.png" alt="Photobooth QR Code" data-i18n-alt="booth.qrAlt">
       </div>
-      <p class="qr-note">Scan with your phone camera</p>
+      <p class="qr-note" data-i18n="booth.note">Scan with your phone camera</p>
       <ol class="steps">
-        <li>Choose your favourite frame.</li>
-        <li>Add your photos or take them with your camera.</li>
-        <li>Download it to keep, and share it with us if you wish.</li>
+        <li data-i18n="booth.s1">Choose your favourite frame.</li>
+        <li data-i18n="booth.s2">Add your photos or take them with your camera.</li>
+        <li data-i18n="booth.s3">Download it to keep, and share it with us if you wish.</li>
       </ol>
-      <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden>Open the photobooth</a>
+      <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden data-i18n="booth.open">Open the photobooth</a>
     </section>
 
     <!-- ============================================
          GREETINGS / DOA & UCAPAN SECTION
          ============================================ -->
     <section id="greetings" class="greetings-section">
-      <h2>Prayers & Wishes</h2>
-      <p class="subtitle">Send your warmest prayers and wishes to the happy couple.</p>
+      <h2 data-i18n="gr.title">Prayers &amp; Wishes</h2>
+      <p class="subtitle" data-i18n="gr.sub">Send your prayers and best wishes to the bride and groom</p>
 
       <!-- Counter -->
       <div class="greetings-counter">
-        Total messages: <span id="greetingsTotal">0</span>
+        <span data-i18n="gr.total">Total wishes:</span> <span id="greetingsTotal">0</span>
       </div>
 
       <!-- Scrollable list -->
       <div class="greetings-list" id="greetingsList">
-        <div class="greetings-empty">Be the first to send wish and pray!</div>
+        <div class="greetings-empty" data-i18n="gr.empty">No wishes yet. Be the first!</div>
       </div>
 
       <!-- Form -->
@@ -274,19 +278,19 @@
         <textarea 
           id="greetingMessage" 
           name="message" 
-          placeholder="Write your message here..." 
+          data-i18n-placeholder="gr.placeholder" placeholder="Write your prayers and wishes here..." 
           maxlength="500"
           required></textarea>
-        <button type="submit" id="greetingSubmitBtn">Send Message</button>
+        <button type="submit" id="greetingSubmitBtn" data-i18n="gr.send">Send Wishes</button>
       </form>
     </section>
 
     <!-- Closing -->
     <section class="closing block">
-      <p class="closing-text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
-      <p class="sign">With love,<br><span class="names">Fira <span>&</span> Baqi</span></p>
+      <p class="closing-text" data-i18n="close.text">Your presence and prayers mean the world to us. Barakallahu fiikum, and thank you for sharing the beginning of our new chapter.</p>
+      <p class="sign"><span data-i18n="close.love">With love,</span><br><span class="names">Fira <span>&</span> Baqi</span></p>
       <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
-      <p class="wassalam" style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.8;">music by The Crosby (Cello and Piano) - Can you feel the love tonight</p>
+      <p class="wassalam" style="margin-top: 1rem; font-size: 0.65rem; opacity: 0.8;"><span data-i18n="close.music">music by</span> The Crosby (Cello and Piano) - Can you feel the love tonight</p>
     </section>
   </main>
 
@@ -299,6 +303,7 @@
     <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
   </button>
 
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
