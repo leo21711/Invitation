@@ -105,7 +105,14 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .portrait{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--gold);border-radius:999px 999px 8px 8px;box-shadow:0 0 0 7px var(--paper),0 0 0 8px var(--gold),0 12px 28px var(--shadow);background:linear-gradient(160deg,#EADCCB,#D5DBC8)}
 .portrait img,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .portrait img,.tile img,.qr img{z-index:1}
-.portrait-wrap .pf{left:-34px;right:auto;bottom:-16px;width:36%;transform:none;z-index:2}
+.portrait-wrap .pf {
+  left: auto;       /* Remove left anchoring */
+  right: -34px;     /* Anchor to the right side */
+  bottom: -16px;
+  width: 36%;
+  transform: scaleX(-1); /* Flips the graphic horizontally so the flowers face inward */
+  z-index: 2;
+}
 .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--brown-soft);font-style:italic;font-size:17px;line-height:1.3}
 .ph small{font-size:13px;opacity:.75}
 .verse{max-width:30ch;margin:0 auto;font-size:clamp(22px,6vw,27px);font-style:italic;color:var(--olive);line-height:1.35}
