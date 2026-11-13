@@ -94,7 +94,7 @@
       </blockquote>
     </section>
 
-    <!-- ✨ NEW: THE COUPLE SECTION ✨ -->
+    <!-- THE COUPLE SECTION -->
     <section class="block alt">
       <h2 class="sec-title" data-i18n="couple.title">The Happy Couple</h2>
       <div class="orn"><svg viewBox="0 0 40 20"><path d="M0,10 Q10,0 20,10 T40,10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
@@ -139,13 +139,11 @@
         </div>
       </div>
     </section>
-    <!-- ✨ END: THE COUPLE SECTION ✨ -->
 
     <!-- Events (Save the Date) -->
     <section class="block">
       <h2 class="sec-title" data-i18n="save.title">Save the Date</h2>
       <div class="events">
-        <!-- Akad Nikah with Islamic Star Icon -->
         <div class="event">
           <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
             <rect x="6" y="6" width="12" height="12"/>
@@ -157,7 +155,6 @@
         
         <div class="vline"></div>
         
-        <!-- Resepsi with Highlight Class -->
         <div class="event highlight">
           <svg class="i" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
           <p class="label" data-i18n="ev.reception">Reception</p>
@@ -171,7 +168,7 @@
       <h2 class="sec-title" data-i18n="venue.title">The Venue</h2>
       <p class="name">Astoria Convention Hall, Mojokerto</p>
       <p class="addr">Jl. Gajah Mada No.61, Mojokerto</p>
-      <p class="addr">East Java, Indonesia</p>
+      <p class="addr" data-i18n="venue.region">East Java, Indonesia</p>
       
       <div class="map-embed">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.5!2d112.4!3d-7.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjQnMDAuMCJTIDExMsKwMjQnMDAuMCJF!5e0!3m2!1sen!2sid!4v1600000000000!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -189,7 +186,7 @@
       <div class="story-card">
         <p class="text" data-i18n="story.text">Two hearts, one journey, towards a life together in His pleasure.</p>
         <div class="video-box" id="videoBox">
-          <div class="ph">Our memories on video<small>add your YouTube link in script.js</small></div>
+          <div class="ph"><span data-i18n="story.videoPh">Our memories on video</span><small data-i18n="story.videoSub">add your YouTube link in script.js</small></div>
         </div>
       </div>
     </section>
@@ -257,14 +254,11 @@
       <a href="#" id="photoboothBtn" class="btn ghost" target="_blank" rel="noopener" hidden data-i18n="booth.open">Open the photobooth</a>
     </section>
 
-    <!-- ============================================
-         GREETINGS / DOA & UCAPAN SECTION
-         ============================================ -->
+    <!-- GREETINGS / DOA & UCAPAN SECTION (Properly enclosed) -->
     <section id="greetings" class="greetings-section">
-      <h2 data-i18n="gr.title">Prayers &amp; Wishes</h2>
+      <h2 data-i18n="gr.title">Prayers & Wishes</h2>
       <p class="subtitle" data-i18n="gr.sub">Send your prayers and best wishes to the bride and groom</p>
 
-           <!-- Form -->
       <form class="greeting-form" id="greetingForm">
         <input type="hidden" id="greetingGuestName" name="guest_name" value="">
         <textarea 
@@ -275,27 +269,23 @@
           required></textarea>
         <button type="submit" id="greetingSubmitBtn" data-i18n="gr.send">Send Wishes</button>
       </form>
-    </section>
       
-      
-      <!-- Counter -->
       <div class="greetings-counter">
         <span data-i18n="gr.total">Total wishes:</span> <span id="greetingsTotal">0</span>
       </div>
 
-      <!-- Scrollable list -->
       <div class="greetings-list" id="greetingsList">
         <div class="greetings-empty" data-i18n="gr.empty">No wishes yet. Be the first!</div>
       </div>
-
+    </section>
 
     <!-- Closing -->
     <section class="closing block">
       <p class="closing-text" data-i18n="close.text">Your presence and prayers are the greatest gifts we could ask for as we begin this new journey. Barakallahu fiikum, and thank you for celebrating this special milestone with us.</p>
       <p class="sign"><span data-i18n="close.love">With love,</span><br><span class="names">Fira <span>&</span> Baqi</span></p>
       <p class="wassalam">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
-      <p class="wassalam" style="margin-top: 1rem; font-size: 0.65rem; opacity: 0.8;"><span data-i18n="close.music">music by</span> The Crosby (Cello and Piano) - Can you feel the love tonight</p>
-      <p class="wassalam" style="margin-top: 1rem; font-size: 0.65rem; opacity: 0.8;">web created and developed by</span> Fira & Baqi</p>
+      <p class="wassalam" style="margin-top: 1.25rem; font-size: 0.95rem; color: var(--brown); opacity: 0.95;"><span data-i18n="close.music">music by</span> The Crosby (Cello and Piano) - Can you feel the love tonight</p>
+      <p class="wassalam" style="margin-top: 0.5rem; font-size: 0.95rem; font-weight: 600; color: var(--brown); opacity: 1;"><span data-i18n="close.credit">web created and developed by</span> Fira &amp; Baqi</p>
     </section>
   </main>
 
