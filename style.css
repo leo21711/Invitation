@@ -120,7 +120,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .venue .name{font-size:22px;font-weight:600}
 .venue .addr{font-size:16px!important;font-style:italic;color:var(--brown-soft)}
 .venue .btn{margin-top:14px}
-.event.highlight{background:rgba(196,105,74,0.2);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;box-shadow:0 4px 16px rgba(217,185,140,0.25);width:100%}
+.event.highlight{background:rgba(196,105,74,0.1);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;box-shadow:0 4px 16px rgba(217,185,140,0.25);width:100%}
 .event.highlight .label{color:var(--terracotta-dark);font-weight:750;letter-spacing:5px}
 .event.highlight p:not(.label){font-weight:650;color:var(--brown)}
 
