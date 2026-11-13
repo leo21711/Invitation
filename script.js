@@ -262,6 +262,7 @@
         if (invitation) invitation.hidden = false;
         document.body.classList.remove('locked');
         window.scrollTo(0, 0);
+        startReveal();
       }, 1700);
     });
   }
@@ -484,6 +485,114 @@
     });
   });
   applyLang(lang);
+
+  // ==========================================
+  // 11. Scroll reveal: soft entrance animations (CSS in style.css, ".rv" rules)
+  // To change a section's style, edit its line below. Styles: up, blur, zoom, left, right,
+  // grow (line draws out), rise (arch lifts in), bloom (floral opens), fade, soft (scale + blur clears),
+  // track (title spacing relaxes, rules grow out), circle (photo opens from the centre),
+  // drift (floral glides in from its corner). Third value = extra delay (s).
+  // Set REVEAL_ENABLED to false to switch every animation off.
+  // ==========================================
+  const REVEAL_ENABLED = true;
+  const REVEAL_STEP = 0.12;          // seconds between items that appear together
+  const REVEAL = [
+    ['.hero > .bismillah, .hero > .salam, .hero > .date-line, .hero > .lede', 'up'],
+    ['.hero > .eyebrow', 'track'],
+    ['.hero > .names', 'up'],
+    ['.hero > .orn, .block > .orn', 'grow'],
+    ['.couple-wrapper > .orn', 'fade'],
+    ['.portrait-wrap', 'rise'],
+    ['.portrait-wrap .deco', 'drift', 0.7],
+    ['.verse', 'up'],
+    ['.sec-title', 'track'],
+    ['.cp-circle', 'circle'],
+    ['.couple-photo .deco', 'drift', 0.5],
+    ['.person-card h3, .person-card p', 'up'],
+    ['.events > .event:first-child', 'left'],
+    ['.events > .event.highlight', 'right'],
+    ['.vline', 'grow'],
+    ['.venue .name, .venue .addr, .venue .btn', 'up'],
+    ['.map-embed', 'zoom'],
+    ['.story-card', 'up'],
+    ['#rsvpSection .lede, #rsvpSection form', 'up'],
+    ['.gallery .tile', 'soft'],
+    ['.block .lede', 'up'],
+    ['.qr', 'zoom'],
+    ['.qr-note, .steps li, #photoboothBtn', 'up'],
+    ['#greetings > *', 'up'],
+    ['.closing-text', 'up'],
+    ['.closing .sign, .closing .wassalam', 'up'],
+    ['#invitation > .deco', 'drift']
+  ];
+
+  function tagReveal() {
+    if (!REVEAL_ENABLED) return;
+    REVEAL.forEach(([sel, style, extra]) => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (el.classList.contains('rv')) return;      // first matching rule wins
+        el.classList.add('rv', 'rv-' + style);
+        if (extra) el.dataset.rvx = extra;
+      });
+    });
+  }
+
+  function endReveal(el) {                              // back to the element's normal CSS
+    el.className = el.className.replace(/\brv(-[\w-]+)?\b/g, '').replace(/\s+/g, ' ').trim();
+    if (!el.className) el.removeAttribute('class');
+    el.style.removeProperty('--dl');
+    delete el.dataset.rvx;
+  }
+
+  let revealIO = null, revealStarted = false;
+
+  function revealEl(el, delay) {
+    if (!el.classList.contains('rv') || el.classList.contains('rv-in')) return;
+    if (revealIO) revealIO.unobserve(el);
+    const d = delay + (parseFloat(el.dataset.rvx) || 0);
+    el.style.setProperty('--dl', d + 's');
+    el.classList.add('rv-in');
+    setTimeout(() => endReveal(el), (d + 2.2) * 1000);
+  }
+
+  function startReveal() {
+    if (revealStarted) return;
+    revealStarted = true;
+    const items = document.querySelectorAll('.rv');
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!items.length) return;
+    if (reduce || !('IntersectionObserver' in window)) { items.forEach(endReveal); return; }
+
+    // Elements that start fully clipped (rise, circle) count as invisible to the browser and would
+    // never trigger, so their parent is observed instead and reveals them.
+    const CLIPPED = /\brv-(rise|circle)\b/;
+    const watched = new Map();                           // observed node -> [elements it reveals]
+
+    let first = true;                                    // wait for the envelope cover to fade
+    revealIO = new IntersectionObserver(entries => {
+      const seen = entries.filter(e => e.isIntersecting);
+      const batch = [...new Set(seen.flatMap(e => watched.get(e.target) || []))]
+        .sort((a, b) => (a.compareDocumentPosition(b) & 4) ? -1 : 1);
+      seen.forEach(e => revealIO.unobserve(e.target));
+      let k = 0;                                           // florals glide in without queuing behind text
+      batch.forEach(el => revealEl(el, (first ? 0.35 : 0) + (el.classList.contains('rv-drift') ? 0 : Math.min(k++, 7) * REVEAL_STEP)));
+      if (batch.length) first = false;
+    }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    items.forEach(el => {
+      const node = (CLIPPED.test(el.className) && el.parentElement) ? el.parentElement : el;
+      if (!watched.has(node)) { watched.set(node, []); revealIO.observe(node); }
+      watched.get(node).push(el);
+    });
+
+    // Safety net: at the very bottom of the page, show anything still waiting
+    window.addEventListener('scroll', () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        document.querySelectorAll('.rv:not(.rv-in)').forEach((el, i) => revealEl(el, Math.min(i, 7) * REVEAL_STEP));
+      }
+    }, { passive: true });
+  }
+
+  tagReveal();
 
   loadGreetings();
 })();
