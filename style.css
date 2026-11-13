@@ -105,7 +105,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .portrait{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--gold);border-radius:999px 999px 8px 8px;box-shadow:0 0 0 7px var(--paper),0 0 0 8px var(--gold),0 12px 28px var(--shadow);background:linear-gradient(160deg,#EADCCB,#D5DBC8)}
 .portrait img,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .portrait img,.tile img,.qr img{z-index:1}
-.portrait-wrap .pf{left:-34px;right:auto;bottom:-16px;width:36%;transform:scaleX(-1);z-index:2}
+.portrait-wrap .pf{left:-34px;right:auto;bottom:-16px;width:36%;transform:none;z-index:2}
 .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--brown-soft);font-style:italic;font-size:17px;line-height:1.3}
 .ph small{font-size:13px;opacity:.75}
 .verse{max-width:30ch;margin:0 auto;font-size:clamp(22px,6vw,27px);font-style:italic;color:var(--olive);line-height:1.35}
@@ -120,7 +120,7 @@ svg.i{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stro
 .venue .name{font-size:22px;font-weight:600}
 .venue .addr{font-size:16px!important;font-style:italic;color:var(--brown-soft)}
 .venue .btn{margin-top:14px}
-.event.highlight{background:rgba(233,197,179,0.6);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;box-shadow:0 4px 16px rgba(217,185,140,0.25);width:100%}
+.event.highlight{background:rgba(255,255,255,0.75);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;box-shadow:0 4px 16px rgba(217,185,140,0.25);width:100%}
 .event.highlight .label{color:var(--terracotta-dark);font-weight:750;letter-spacing:5px}
 .event.highlight p:not(.label){font-weight:650;color:var(--brown)}
 
@@ -329,7 +329,7 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 .greeting-form button {
   width: 100%;
   padding: 12px;
-  background: #C4694A;
+  background: linear-gradient(135deg, #c9a87c 0%, #8b6f47 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -407,3 +407,47 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
 
 /* Opening greeting (salam) under the bismillah */
 .salam{margin:0 auto 22px;max-width:320px;font-style:italic;font-size:18px;line-height:1.5;letter-spacing:.5px;color:var(--brown-soft)}
+/* soften the clipped outer edges of the portrait floral */
+.portrait-wrap .pf{-webkit-mask-image:linear-gradient(to top,transparent 0,#000 12%),linear-gradient(to right,transparent 0,#000 12%);mask-image:linear-gradient(to top,transparent 0,#000 12%),linear-gradient(to right,transparent 0,#000 12%);-webkit-mask-composite:source-in;mask-composite:intersect}
+
+/* ============================================
+   SCROLL REVEAL (entrance animations)
+   script.js adds .rv + a style class (.rv-up, .rv-blur ...) and then .rv-in when the element
+   scrolls into view; the classes are removed again once the animation has finished.
+   Uses the separate translate/scale/rotate properties so existing transforms are untouched.
+   ============================================ */
+.rv{--ease:cubic-bezier(.22,.61,.36,1);opacity:0;
+  transition:opacity 1s var(--ease) var(--dl,0s),translate 1s var(--ease) var(--dl,0s),scale 1s var(--ease) var(--dl,0s),rotate 1s var(--ease) var(--dl,0s),filter 1s var(--ease) var(--dl,0s),clip-path 1.3s var(--ease) var(--dl,0s),letter-spacing 1.3s var(--ease) var(--dl,0s)}
+.rv-up{translate:0 28px}
+.rv-blur{translate:0 12px;filter:blur(10px)}
+.rv-zoom{scale:.9}
+.rv-left{translate:-40px 0}
+.rv-right{translate:40px 0}
+.rv-grow{scale:0 1}
+.rv-rise{translate:0 24px;clip-path:inset(100% -60px -60px -60px)}
+.rv-bloom{scale:.55;rotate:-6deg}
+.rv-bloom.d-tl{transform-origin:0 0}.rv-bloom.d-tr{transform-origin:100% 0}
+.rv-bloom.d-br{transform-origin:100% 100%}.rv-bloom.d-bl:not(.pf){transform-origin:0 100%}
+.rv-soft{scale:.94;filter:blur(5px)}
+.rv-track{letter-spacing:1px}
+.rv-track::before,.rv-track::after{scale:0 1;transition:scale 1s var(--ease) calc(var(--dl,0s) + .3s)}
+.rv-track::before{transform-origin:right center}.rv-track::after{transform-origin:left center}
+.rv-circle{opacity:1;clip-path:circle(0% at 50% 50%)}
+.rv-circle img{scale:1.18;transition:scale 1.5s var(--ease) var(--dl,0s)}
+.rv-drift{translate:0 30px;transition:opacity 1.3s var(--ease) var(--dl,0s),translate 1.7s var(--ease) var(--dl,0s)}
+.rv-drift.d-tl{translate:-44px -44px}.rv-drift.d-tr{translate:44px -44px}
+.rv-drift.d-bl{translate:-44px 44px}.rv-drift.d-br{translate:44px 44px}
+.rv.rv-in{opacity:1;translate:0 0;scale:1;rotate:0deg;filter:none;clip-path:inset(-60px)}
+
+/* in-states for the styles above */
+.rv-track.rv-in::before,.rv-track.rv-in::after{scale:1 1}
+.rv-track.rv-in.sec-title{letter-spacing:5px}   /* = the normal .sec-title spacing */
+.rv-track.rv-in.eyebrow{letter-spacing:3px}     /* = the normal .eyebrow spacing */
+.rv-circle.rv-in{clip-path:circle(100% at 50% 50%)}
+.rv-circle.rv-in img{scale:1}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;translate:none!important;scale:none!important;rotate:none!important;filter:none!important;clip-path:none!important;transition:none!important}
+  .rv-track::before,.rv-track::after{scale:1 1!important;transition:none!important}
+  .rv-track.sec-title{letter-spacing:5px!important}.rv-track.eyebrow{letter-spacing:3px!important}
+  .rv-circle img{scale:1!important;transition:none!important}
+}
