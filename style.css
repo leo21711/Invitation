@@ -443,3 +443,6 @@ legend{padding:0;margin-bottom:8px;font-size:17px;font-weight:600}
   .rv-track.sec-title{letter-spacing:5px!important}.rv-track.eyebrow{letter-spacing:3px!important}
   .rv-circle img{scale:1!important;transition:none!important}
 }
+
+/* group invitation note above the RSVP name box */
+.group-note{margin:0 0 14px;padding:10px 14px;background:rgba(152,164,141,.16);border:1px solid var(--gold-light);border-radius:12px;font-size:17px;font-style:italic;line-height:1.4;color:var(--olive);text-align:center}
