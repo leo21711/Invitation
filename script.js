@@ -25,6 +25,10 @@
     try { guestName = decodeURIComponent(guestName); } catch (e) {}
   }
 
+  // Group invitation: add ?group=1 to the link (e.g. /Keluarga%20Besar?group=1). The page greets the
+  // group, but the RSVP name box stays open so each member can type their own name.
+  const isGroup = !!guestName && ['1', 'true', 'yes'].indexOf((params.get('group') || '').toLowerCase()) > -1;
+
   // ==========================================
   // 1b. Language: English by default. ?lang=id, a saved choice, or the cover switch selects Bahasa.
   // ==========================================
@@ -61,16 +65,18 @@
     ['guestNameCover', 'guestNameLine', 'guestNameBody'].forEach(id => {
       if ($(id)) $(id).textContent = shown;
     });
-    if ($('greetingGuestName')) $('greetingGuestName').value = guestName || '';
+    if ($('greetingGuestName')) $('greetingGuestName').value = isGroup ? '' : (guestName || '');
+    const note = $('rsvpGroupNote');
+    if (note) { note.hidden = !isGroup; if (isGroup) note.textContent = t('rsvp.groupNote', { group: guestName }); }
   }
 
   function initNameField() {
     const field = $('guestName');
     if (!field) return;
-    if (guestName) {                   // personalised link: locked, as before
+    if (guestName && !isGroup) {       // personalised link: locked, as before
       field.value = guestName;
       field.readOnly = true;
-    } else {                           // bare link: the guest types their name
+    } else {                           // bare link or group link: the guest types their own name
       field.value = '';
       field.readOnly = false;
     }
@@ -80,7 +86,8 @@
 
   function currentName() {
     const f = $('guestName');
-    return ((f && f.value) || guestName || '').trim();
+    const typed = ((f && f.value) || '').trim();
+    return isGroup ? typed : (typed || guestName || '').trim();
   }
 
   // ==========================================
@@ -226,7 +233,7 @@
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'add_rsvp', name: name, status: status, pax: pax })
+          body: JSON.stringify({ action: 'add_rsvp', name: name, group: isGroup ? guestName : '', status: status, pax: pax })
         });
         currentAttendanceStatus = status === 'attending' ? 'attend' : 'not-attend';
         try { localStorage.setItem(STATUS_KEY, currentAttendanceStatus); } catch (x) {}
